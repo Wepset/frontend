@@ -6,7 +6,7 @@ import { Form, Button, Container, Image } from 'react-bootstrap';
 import { FiZoomIn } from 'react-icons/fi';
 import { AiOutlineSolution } from 'react-icons/ai';
 
-import Logo from './../../alfa-sistemas.png';
+import Logo from './../../images/alfa-sistemas.png';
 
 import Consumer from '../../components/Consumer/Consumer.jsx';
 import Product from '../../components/Product/Product.jsx';
