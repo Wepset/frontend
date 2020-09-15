@@ -6,6 +6,12 @@ Development of a Sales Screen Prototype
 
 ```
     composer create-project --prefer-dist laravel/laravel server
+
+    php artisan make:model Order -mcr
+
+    php artisan make:model Product -mcr
+
+    php artisan make:model Consumer -mcr
 ```
 
 # View
