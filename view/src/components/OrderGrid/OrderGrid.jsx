@@ -205,7 +205,7 @@ function OrderGrid() {
                         <td>{formFields.registers.quantity}</td>
                         <td>{formFields.registers.value}</td>
 
-                        <td colSpan="5">
+                        <td colSpan="6">
                             <button type="button" className="btn btn-primary">Converter em pedido</button>
                         </td>
                     </tr>
@@ -215,7 +215,7 @@ function OrderGrid() {
                         <td>{formFields.selected.quantity}</td>
                         <td>{formFields.selected.value}</td>
 
-                        <td colSpan="5">
+                        <td colSpan="6">
                             <button type="button" className="btn btn-primary">Gerar PDF</button>
                         </td>
                     </tr>
