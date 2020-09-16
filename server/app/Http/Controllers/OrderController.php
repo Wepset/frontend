@@ -14,7 +14,11 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
+        $order = new \App\Models\Order();
+
+        $data = $order->leftJoin('products', 'products.id', '=', 'orders.product_id');
+
+        return response()->json($data->get());
     }
 
     /**
@@ -35,7 +39,20 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = \App\Models\Order::where('product_id', $request->id);
+
+        $p = $data->first();
+
+        if (empty($p)) {
+            $order = new \App\Models\Order();
+
+            $order->product_id = $request->id;
+            $order->quantity = 1;
+
+            $data = $order->save();
+        }
+
+        return response()->json([]);
     }
 
     /**
