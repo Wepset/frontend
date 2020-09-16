@@ -61,13 +61,15 @@ function OrderGrid() {
      */
     function handleUpdates() {
         const selects = formFields.products.reduce((sum, products) => (products.selected === true) ? parseInt(sum + 1) : parseInt(sum), 0);
+        const totals = formFields.products.length;
+
         const total_selects = formFields.products.reduce((sum, products) => (products.selected === true) ? parseFloat(sum + products.total_venda) : parseFloat(sum), 0);
         const total_registers = formFields.products.reduce((sum, products) => parseFloat(sum + products.total_venda), 0);
 
         setFormFields({
             products: formFields.products,
             registers: {
-                quantity: formFields.products.length,
+                quantity: totals,
                 value: total_registers
             },
             selected: {
@@ -77,8 +79,14 @@ function OrderGrid() {
         });
     }
 
+    /**
+     * Update totals on checkbox click.
+     * 
+     * @param {Integer} id 
+     * @param {Float} value 
+     */
     function handleSetterCheckbox(id, value) {
-        const new_products = formFields.products.map(function (arr) {
+        const updatedProducts = formFields.products.map(function (arr) {
             if (arr.id === id) {
                 arr.selected = value;
             }
@@ -87,36 +95,36 @@ function OrderGrid() {
         });
 
         setFormFields({
-            products: new_products,
+            products: updatedProducts,
             registers: formFields.registers,
             selected: formFields.selected
         });
-
-        handleUpdates();
     }
 
+    /**
+     * Update totals on change quantity input.
+     * 
+     * @param {Integer} id 
+     * @param {Integer} quantity 
+     */
     function updateTotalSale(id, quantity) {
         const price = formFields.products.reduce((sum, products) => (products.id === id) ? parseFloat(sum + products.preco_venda) : parseFloat(sum), 0);
 
-        const new_products = formFields.products.map(function (arr) {
+        const updatedProducts = formFields.products.map(function (arr) {
             let obj = arr;
 
             if (arr.id === id) {
                 obj.total_venda = quantity * price;
-
-                return obj;
-            } else {
-                return arr;
             }
+
+            return obj;
         });
 
         setFormFields({
-            products: new_products,
+            products: updatedProducts,
             registers: formFields.registers,
             selected: formFields.selected
         });
-
-        handleUpdates();
     }
 
     return (
@@ -152,7 +160,7 @@ function OrderGrid() {
                             return (
                                 <tr key={value.id}>
                                     <td>
-                                        <input type="checkbox" onClick={(e) => { handleSetterCheckbox(value.id, e.target.checked) }} value={value.selected} aria-label="Checkbox for following text input" />
+                                        <input type="checkbox" onClick={(e) => { handleSetterCheckbox(value.id, e.target.checked); handleUpdates(); }} value={value.selected} aria-label="Checkbox for following text input" />
                                     </td>
                                     <td>{value.id}</td>
                                     <td>{new Date(value.created_at).toISOString().replace(/T/, ' ').replace(/\..+/, '')}</td>
@@ -167,7 +175,7 @@ function OrderGrid() {
                                     <td>{value.un}</td>
                                     <td>{value.un}</td>
                                     <td>
-                                        <input type="text" onChange={(e) => { updateTotalSale(value.id, e.target.value) }} style={{ "width": "75px" }} aria-label="Quantity" className="col-sm" value={value.qtd} />
+                                        <input type="text" onChange={(e) => { updateTotalSale(value.id, e.target.value); handleUpdates(); }} style={{ "width": "75px" }} aria-label="Quantity" className="col-sm" value={value.qtd} />
                                     </td>
                                     <td>{value.preco_venda}</td>
                                     <td>{(value.total_venda).toFixed(2)}</td>
