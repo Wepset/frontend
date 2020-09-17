@@ -22,7 +22,7 @@ function Sales() {
                         </Button>
                     </Form.Group>
                     <Form.Group className="d-flex align-items-center">
-                        <span className="d-flex rounded float-right img-fluid" style={{ "height": "70px", "width": "70px" }}>
+                        <span className="d-flex rounded float-right img-fluid">
                             <Logo />
                         </span>
                     </Form.Group>
