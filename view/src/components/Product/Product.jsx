@@ -123,7 +123,7 @@ const Box = () => {
     return (
         <div className="blurry box">
 
-            <div className="cursor" style={{ "borderRadius": "7px" }}>
+            <div className="cursor dark-blue border-radius-title">
                 <span className="main-title">
                     <div className="d-flex justify-content-md-start align-items-center text-light font-weight-bold title-font-size">
                         <span>Busca: Item</span>

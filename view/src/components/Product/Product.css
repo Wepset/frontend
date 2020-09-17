@@ -32,7 +32,15 @@ td, tr {
 
 .cursor {
     cursor: move;
+}
+
+.dark-blue {
     background-color: #143e82;
+}
+
+.border-radius-title {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 .main-title {
@@ -49,6 +57,11 @@ td, tr {
     margin-top: 10px;
     top: 0;
     right: 0;
+}
+
+.close-popup img {
+    width: 25px;
+    height: 25px;
 }
 
 .absolute-left {
