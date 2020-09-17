@@ -103,7 +103,7 @@ const Box = () => {
         const RIGHT = 39;
         const DOWN = 40;
 
-        let id = products[rowSelected].id;
+        let id = (products[rowSelected].id > 0) ? products[rowSelected].id : 0;
 
         const StrHTMLComponent = `tr[data-id="${id}"]`;
 
@@ -114,12 +114,18 @@ const Box = () => {
             case LEFT:
                 break;
             case UP:
-                setRowSelected(rowSelected - 1);
+                if (rowSelected > 0) {
+                    setRowSelected(rowSelected - 1);
+                }
+
                 break;
             case RIGHT:
                 break;
             case DOWN:
-                setRowSelected(rowSelected + 1);
+                if ((rowSelected + 1) < products.length) {
+                    setRowSelected(rowSelected + 1);
+                }
+
                 break;
             default:
                 break;
