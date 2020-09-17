@@ -24,7 +24,7 @@ const Box = () => {
     });
 
     /** @var {Array} */
-    const [rowSelected, setRowSelected] = useState(0);
+    const [rowSelected, setRowSelected] = useState(1);
 
     /** @var {Array} */
     const [products, setProducts] = useState([]);
@@ -36,7 +36,7 @@ const Box = () => {
         });
 
         Box.run();
-    });
+    }, []);
 
     /**
      * setArgs
@@ -56,20 +56,24 @@ const Box = () => {
      * 
      * @param {Object} e 
      */
-    function getProducts(e) {
+    async function getProducts(e) {
         e.preventDefault();
 
         let elements = Object.entries(args).map(function (arr) {
             return (arr[1].length > 0) ? `${arr[0]}=${arr[1].toUpperCase()}` : '';
         });
 
-        (new Product()).get(elements.filter(n => n).join('&')).then(response => {
-            setProducts(response.data);
+        const urlParams = elements.filter(n => n).join('&');
+        const response = await (new Product()).get(urlParams);
+        const products = response.data;
 
-            const StrHTMLComponent = `tr[data-id="${response.data[0].id}"]`;
+        setProducts(products);
+
+        if (Object.keys(products).length) {
+            const StrHTMLComponent = `tr[data-id="${products[0].id}"]`;
 
             document.querySelector(StrHTMLComponent).focus();
-        });
+        }
     }
 
     /**
