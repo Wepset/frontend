@@ -33,11 +33,13 @@ function OrderGrid() {
                 arr.total_venda = 0.0;
                 arr.quantity = 0;
 
+                const price = parseFloat(arr.preco_venda).toFixed(2);
+
                 let prices = [
-                    { value: (parseFloat(arr.preco_venda).toFixed(2) * 1.00), label: `${parseFloat(arr.preco_venda).toFixed(2) * 1.00} -> 0%`, selected: true },
-                    { value: (parseFloat(arr.preco_venda).toFixed(2) * 0.96), label: `${parseFloat(arr.preco_venda).toFixed(2) * 0.96} -> 4%`, selected: false },
-                    { value: (parseFloat(arr.preco_venda).toFixed(2) * 0.92), label: `${parseFloat(arr.preco_venda).toFixed(2) * 0.92} -> 8%`, selected: false },
-                    { value: 0.0, label: `--OUTROS--`, selected: false }
+                    { value: (price * 1.00).toFixed(2), label: `${(price * 1.00).toFixed(2)} -> 0%`, selected: true },
+                    { value: (price * 0.96).toFixed(2), label: `${(price * 0.96).toFixed(2)} -> 4%`, selected: false },
+                    { value: (price * 0.92).toFixed(2), label: `${(price * 0.92).toFixed(2)} -> 8%`, selected: false },
+                    { value: (0.0.toFixed(2)), label: `--OUTROS--`, selected: false }
                 ];
 
                 arr.preco_venda = prices;
