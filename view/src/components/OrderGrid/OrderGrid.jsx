@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-import { AiFillGold, AiOutlineDiff } from 'react-icons/ai';
-
-import Whatsapp from '../Whatsapp/Whatsapp.jsx';
-import Delete from '../Delete/Delete.jsx';
+import Icon from '../Icon/Icon.jsx';
 
 import Order from '../../http/Order.js';
+
+import './OrderGrid.css';
 
 function OrderGrid() {
     const [formFields, setFormFields] = useState({
@@ -132,7 +131,7 @@ function OrderGrid() {
             <table className="table table-hover">
                 <thead>
                     <tr>
-                        <th scope="col" colSpan="2"></th>
+                        <th scope="col"></th>
                         <th scope="col">#</th>
                         <th scope="col">DATA</th>
                         <th scope="col">FABRICANTE</th>
@@ -159,11 +158,9 @@ function OrderGrid() {
                         (formFields.products).map(function (value, index, array) {
                             return (
                                 <tr key={value.id}>
-                                    <td>
-                                        <Delete />
-                                    </td>
-                                    <td>
-                                        <input type="checkbox" onClick={(e) => { handleSetterCheckbox(value.id, e.target.checked); handleUpdates(); }} value={value.selected} aria-label="Checkbox for following text input" />
+                                    <td className="d-flex align-items-center">
+                                        <Icon label="icon L1C2" alt="Delete Icon" />
+                                        <input type="checkbox" className="ml-1" onClick={(e) => { handleSetterCheckbox(value.id, e.target.checked); handleUpdates(); }} value={value.selected} />
                                     </td>
                                     <td>{value.id}</td>
                                     <td>{new Date(value.created_at).toISOString().replace(/T/, ' ').replace(/\..+/, '')}</td>
@@ -178,7 +175,7 @@ function OrderGrid() {
                                     <td>{value.un}</td>
                                     <td>{value.un}</td>
                                     <td>
-                                        <input type="text" onChange={(e) => { updateTotalSale(value.id, e.target.value); handleUpdates(); }} style={{ "width": "75px" }} aria-label="Quantity" className="col-sm" value={value.qtd} />
+                                        <input type="text" onChange={(e) => { updateTotalSale(value.id, e.target.value); handleUpdates(); }} aria-label="Quantity" className="col-sm" value={value.qtd} />
                                     </td>
                                     <td>{value.preco_venda}</td>
                                     <td>{(value.total_venda).toFixed(2)}</td>
@@ -186,15 +183,15 @@ function OrderGrid() {
                                     <td>{value.preco_promocao}</td>
                                     <td>{value.preco_venda}</td>
                                     <td>
-                                        <i><AiFillGold /></i>
-                                        <i><AiOutlineDiff /></i>
-                                        <i><AiFillGold /></i>
-                                        <i><AiFillGold /></i>
-                                        <i><AiFillGold /></i>
-                                        <i><AiFillGold /></i>
-                                        <i><AiFillGold /></i>
-                                        <i><AiFillGold /></i>
-                                        <Whatsapp />
+                                        <Icon label="icon L11C3" alt="L11C3" />
+                                        <Icon label="icon L6C4" alt="L6C4" />
+                                        <Icon label="icon L7C5" alt="L7C5" />
+                                        <Icon label="icon L8C6" alt="L8C6" />
+                                        <Icon label="icon L6C2" alt="L6C2" />
+                                        <Icon label="icon L1C5" alt="L1C5" />
+                                        <Icon label="icon L6C4" alt="L6C4" />
+                                        <Icon label="icon L6C4" alt="L6C4" />
+                                        <Icon label="icon L7C1" alt="L7C1" />
                                     </td>
                                 </tr>
                             );
@@ -224,7 +221,7 @@ function OrderGrid() {
                     </tr>
                 </tfoot>
             </table>
-        </div>
+        </div >
     );
 }
 
