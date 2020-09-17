@@ -65,6 +65,10 @@ const Box = () => {
 
         (new Product()).get(elements.filter(n => n).join('&')).then(response => {
             setProducts(response.data);
+
+            const StrHTMLComponent = `tr[data-id="${response.data[0].id}"]`;
+
+            document.querySelector(StrHTMLComponent).focus();
         });
     }
 
