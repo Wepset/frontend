@@ -239,10 +239,10 @@ function OrderGrid() {
                                     <td>{(value.sub_descricao).substr(0, 5)}</td>
                                     <td>{(value.obs).substr(0, 5)}</td>
                                     <td>{(value.marca).substr(0, 5)}</td>
+                                    <td>0,00</td>
                                     <td>{value.un}</td>
-                                    <td>{value.un}</td>
-                                    <td>{value.un}</td>
-                                    <td>{value.un}</td>
+                                    <td>100</td>
+                                    <td>100</td>
                                     <td>
                                         <input type="text" onChange={(e) => { updateQuantity(value.id, e); updateTotalSale(); handleUpdates(); }} style={{ "width": "75px" }} aria-label="Quantity" className="col-sm" value={value.qtd} />
                                     </td>
@@ -256,9 +256,19 @@ function OrderGrid() {
                                         </select>
                                     </td>
                                     <td>{(value.total_venda).toFixed(2)}</td>
-                                    <td>{value.preco_promocao}</td>
-                                    <td>{value.preco_promocao}</td>
+                                    <td>{value.quantity}</td>
                                     <td>0.00</td>
+                                    <td>
+                                        {
+                                            value.preco_venda.map(function (str, index) {
+                                                if (str.selected) {
+                                                    return str.value;
+                                                }
+
+                                                return ''
+                                            })
+                                        }
+                                    </td>
                                     <td>
                                         <Icon label="icon L11C3" alt="L11C3" />
                                         <Icon label="icon L6C4" alt="L6C4" />
