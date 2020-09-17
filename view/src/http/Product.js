@@ -7,8 +7,22 @@ class Product {
     /** @var {String} */
     static CSV = "127.0.0.1:8080/api/products/csv";
 
-    get(args) {
+    /**
+     * Display a listing of the resource.
+     * 
+     * @param {Void}
+     */
+    index() {
         return api.get('products');
+    }
+
+    /**
+     * Get an listing of products with some conditions.
+     * 
+     * @param {String} args 
+     */
+    get(args) {
+        return api.get(`getproducts?${args}`);
     }
 }
 
