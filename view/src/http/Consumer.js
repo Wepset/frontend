@@ -7,6 +7,11 @@ class Consumer {
     /** @var {String} */
     static CSV = "127.0.0.1:8080/api/consumers/csv";
 
+    /**
+     * Display the specified resource.
+     *
+     * @param {Object} params
+     */
     get(params) {
         const elements = Object.entries(params);
 
