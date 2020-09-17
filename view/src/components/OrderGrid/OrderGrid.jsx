@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 
 import { AiFillGold, AiOutlineDiff } from 'react-icons/ai';
 
+import Whatsapp from '../Whatsapp/Whatsapp.jsx';
+import Delete from '../Delete/Delete.jsx';
+
 import Order from '../../http/Order.js';
 
 function OrderGrid() {
@@ -27,13 +30,12 @@ function OrderGrid() {
             let products_form = response.data;
 
             products_form.map(function (arr) {
-                let element = arr;
+                arr.selected = false;
+                arr.total_venda = 0.0;
+                arr.quantity = 0;
+                arr.preco_venda = parseFloat(arr.preco_venda).toFixed(2)
 
-                element.selected = false;
-                element.total_venda = 0.0;
-                element.quantity = 0;
-
-                return element;
+                return arr;
             });
 
             setFormFields({
@@ -70,11 +72,11 @@ function OrderGrid() {
             products: formFields.products,
             registers: {
                 quantity: totals,
-                value: total_registers
+                value: total_registers.toFixed(2)
             },
             selected: {
                 quantity: selects,
-                value: total_selects
+                value: total_selects.toFixed(2)
             }
         });
     }
@@ -111,13 +113,11 @@ function OrderGrid() {
         const price = formFields.products.reduce((sum, products) => (products.id === id) ? parseFloat(sum + products.preco_venda) : parseFloat(sum), 0);
 
         const updatedProducts = formFields.products.map(function (arr) {
-            let obj = arr;
-
             if (arr.id === id) {
-                obj.total_venda = quantity * price;
+                arr.total_venda = quantity * price;
             }
 
-            return obj;
+            return arr;
         });
 
         setFormFields({
@@ -132,7 +132,7 @@ function OrderGrid() {
             <table className="table table-hover">
                 <thead>
                     <tr>
-                        <th scope="col"></th>
+                        <th scope="col" colSpan="2"></th>
                         <th scope="col">#</th>
                         <th scope="col">DATA</th>
                         <th scope="col">FABRICANTE</th>
@@ -159,6 +159,9 @@ function OrderGrid() {
                         (formFields.products).map(function (value, index, array) {
                             return (
                                 <tr key={value.id}>
+                                    <td>
+                                        <Delete />
+                                    </td>
                                     <td>
                                         <input type="checkbox" onClick={(e) => { handleSetterCheckbox(value.id, e.target.checked); handleUpdates(); }} value={value.selected} aria-label="Checkbox for following text input" />
                                     </td>
@@ -191,7 +194,7 @@ function OrderGrid() {
                                         <i><AiFillGold /></i>
                                         <i><AiFillGold /></i>
                                         <i><AiFillGold /></i>
-                                        <i><AiFillGold /></i>
+                                        <Whatsapp />
                                     </td>
                                 </tr>
                             );
