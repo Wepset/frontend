@@ -32,7 +32,15 @@ function OrderGrid() {
                 arr.selected = false;
                 arr.total_venda = 0.0;
                 arr.quantity = 0;
-                arr.preco_venda = parseFloat(arr.preco_venda).toFixed(2)
+
+                let prices = [
+                    { value: (parseFloat(arr.preco_venda).toFixed(2) * 1.00), label: `${parseFloat(arr.preco_venda).toFixed(2) * 1.00} -> 0%`, selected: true },
+                    { value: (parseFloat(arr.preco_venda).toFixed(2) * 0.96), label: `${parseFloat(arr.preco_venda).toFixed(2) * 0.96} -> 4%`, selected: false },
+                    { value: (parseFloat(arr.preco_venda).toFixed(2) * 0.92), label: `${parseFloat(arr.preco_venda).toFixed(2) * 0.92} -> 8%`, selected: false },
+                    { value: 0.0, label: `--OUTROS--`, selected: false }
+                ];
+
+                arr.preco_venda = prices;
 
                 return arr;
             });
@@ -102,19 +110,80 @@ function OrderGrid() {
         });
     }
 
+    function handleUpdateSelect(e, id) {
+        let produtsSwap = formFields.products;
+        let newValue = e.target.value;
+
+        produtsSwap.map(function (arr, idx) {
+            if (arr.id === id) {
+                let element_id = 0;
+
+                arr.preco_venda.forEach(function (value, index, array) {
+                    if (parseFloat(newValue) === parseFloat(value.value)) {
+                        element_id = index;
+                    }
+                });
+
+                arr.preco_venda.forEach(function (value, index, array) {
+                    if (index === element_id) {
+                        value.selected = true;
+                    } else {
+                        value.selected = false;
+                    }
+
+                    return value;
+                });
+            }
+
+            return arr;
+        });
+
+        setFormFields({
+            products: produtsSwap,
+            registers: formFields.registers,
+            selected: formFields.selected
+        });
+
+        updateTotalSale();
+
+        handleUpdates();
+    }
+
+    function updateQuantity(id, e) {
+        let productsSwap = formFields.products;
+
+        productsSwap.map(function (arr, index) {
+            if (arr.id === id) {
+                arr.quantity = e.target.value;
+            }
+
+            return arr;
+        });
+
+        setFormFields({
+            products: productsSwap,
+            registers: formFields.registers,
+            selected: formFields.selected
+        });
+    }
+
     /**
      * Update totals on change quantity input.
      * 
      * @param {Integer} id 
      * @param {Integer} quantity 
      */
-    function updateTotalSale(id, quantity) {
-        const price = formFields.products.reduce((sum, products) => (products.id === id) ? parseFloat(sum + products.preco_venda) : parseFloat(sum), 0);
-
+    function updateTotalSale() {
         const updatedProducts = formFields.products.map(function (arr) {
-            if (arr.id === id) {
-                arr.total_venda = quantity * price;
-            }
+            let price = 0;
+
+            arr.preco_venda.forEach(function (value, index, array) {
+                if (value.selected === true) {
+                    price = value.value;
+                }
+            });
+
+            arr.total_venda = arr.quantity * price;
 
             return arr;
         });
@@ -175,13 +244,21 @@ function OrderGrid() {
                                     <td>{value.un}</td>
                                     <td>{value.un}</td>
                                     <td>
-                                        <input type="text" onChange={(e) => { updateTotalSale(value.id, e.target.value); handleUpdates(); }} aria-label="Quantity" className="col-sm" value={value.qtd} />
+                                        <input type="text" onChange={(e) => { updateQuantity(value.id, e); updateTotalSale(); handleUpdates(); }} style={{ "width": "75px" }} aria-label="Quantity" className="col-sm" value={value.qtd} />
                                     </td>
-                                    <td>{value.preco_venda}</td>
+                                    <td>
+                                        <select className="form-control form-control" onChange={(e) => { handleUpdateSelect(e, value.id); }} style={{ "width": "90px" }}>
+                                            {
+                                                value.preco_venda.map(function (str, index) {
+                                                    return <option key={index} value={parseFloat(str.value)}>{str.label}</option>;
+                                                })
+                                            }
+                                        </select>
+                                    </td>
                                     <td>{(value.total_venda).toFixed(2)}</td>
                                     <td>{value.preco_promocao}</td>
                                     <td>{value.preco_promocao}</td>
-                                    <td>{value.preco_venda}</td>
+                                    <td>0.00</td>
                                     <td>
                                         <Icon label="icon L11C3" alt="L11C3" />
                                         <Icon label="icon L6C4" alt="L6C4" />
