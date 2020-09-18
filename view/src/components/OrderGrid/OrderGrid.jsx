@@ -1,10 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 
 import Icon from '../Icon/Icon.jsx';
-
 import Order from '../../http/Order.js';
-
-import './OrderGrid.css';
 
 function OrderGrid() {
     const [formFields, setFormFields] = useState({
@@ -24,7 +21,7 @@ function OrderGrid() {
      * 
      * @param {Void}
      */
-    function handleProducts() {
+    const handleProducts = useCallback(() => {
         ((new Order()).index()).then(response => {
             let products_form = response.data;
 
@@ -59,10 +56,6 @@ function OrderGrid() {
                 }
             })
         });
-    }
-
-    useEffect(function () {
-        handleProducts();
     }, []);
 
     /**
@@ -70,7 +63,7 @@ function OrderGrid() {
      * 
      * @param {Void}
      */
-    function handleUpdates() {
+    const handleUpdates = useCallback(() => {
         const selects = formFields.products.reduce((sum, products) => (products.selected === true) ? parseInt(sum + 1) : parseInt(sum), 0);
         const totals = formFields.products.length;
 
@@ -88,7 +81,7 @@ function OrderGrid() {
                 value: total_selects.toFixed(2)
             }
         });
-    }
+    },  [formFields.products]);
 
     /**
      * Update totals on checkbox click.
@@ -96,7 +89,7 @@ function OrderGrid() {
      * @param {Integer} id 
      * @param {Float} value 
      */
-    function handleSetterCheckbox(id, value) {
+    const handleSetterCheckbox = useCallback((id, value) => {
         const updatedProducts = formFields.products.map(function (arr) {
             if (arr.id === id) {
                 arr.selected = value;
@@ -110,9 +103,37 @@ function OrderGrid() {
             registers: formFields.registers,
             selected: formFields.selected
         });
-    }
+    }, [formFields.products, formFields.registers, formFields.selected]);
 
-    function handleUpdateSelect(e, id) {
+    /**
+     * Update totals on change quantity input.
+     * 
+     * @param {Integer} id 
+     * @param {Integer} quantity 
+     */
+    const updateTotalSale = useCallback(() => {
+        const updatedProducts = formFields.products.map(function (arr) {
+            let price = 0;
+
+            arr.preco_venda.forEach(function (value, index, array) {
+                if (value.selected === true) {
+                    price = value.value;
+                }
+            });
+
+            arr.total_venda = arr.quantity * price;
+
+            return arr;
+        });
+
+        setFormFields({
+            products: updatedProducts,
+            registers: formFields.registers,
+            selected: formFields.selected
+        });
+    }, [formFields.products, formFields.registers, formFields.selected]);
+
+    const handleUpdateSelect = useCallback((e, id) => {
         let produtsSwap = formFields.products;
         let newValue = e.target.value;
 
@@ -149,9 +170,9 @@ function OrderGrid() {
         updateTotalSale();
 
         handleUpdates();
-    }
+    }, [formFields.products, formFields.registers, formFields.selected, handleUpdates, updateTotalSale]);
 
-    function updateQuantity(id, e) {
+    const updateQuantity = useCallback((id, e) => {
         let productsSwap = formFields.products;
 
         productsSwap.map(function (arr, index) {
@@ -167,39 +188,15 @@ function OrderGrid() {
             registers: formFields.registers,
             selected: formFields.selected
         });
-    }
+    }, [formFields.products, formFields.registers, formFields.selected]);
 
-    /**
-     * Update totals on change quantity input.
-     * 
-     * @param {Integer} id 
-     * @param {Integer} quantity 
-     */
-    function updateTotalSale() {
-        const updatedProducts = formFields.products.map(function (arr) {
-            let price = 0;
-
-            arr.preco_venda.forEach(function (value, index, array) {
-                if (value.selected === true) {
-                    price = value.value;
-                }
-            });
-
-            arr.total_venda = arr.quantity * price;
-
-            return arr;
-        });
-
-        setFormFields({
-            products: updatedProducts,
-            registers: formFields.registers,
-            selected: formFields.selected
-        });
-    }
+    useEffect(function () {
+        handleProducts();
+    }, [handleProducts]);
 
     return (
         <div>
-            <table className="table table-hover">
+            <table className="table table-hover table-sm">
                 <thead>
                     <tr>
                         <th scope="col"></th>
@@ -246,10 +243,10 @@ function OrderGrid() {
                                     <td>100</td>
                                     <td>100</td>
                                     <td>
-                                        <input type="text" onChange={(e) => { updateQuantity(value.id, e); updateTotalSale(); handleUpdates(); }} style={{ "width": "75px" }} aria-label="Quantity" className="col-sm" value={value.qtd} />
+                                        <input type="text" onChange={(e) => { updateQuantity(value.id, e); updateTotalSale(); handleUpdates(); }} style={{ "width": "75px" }} aria-label="Quantity" className="form-control form-control-sm" value={value.qtd} />
                                     </td>
                                     <td>
-                                        <select className="form-control form-control" onChange={(e) => { handleUpdateSelect(e, value.id); }} style={{ "width": "120px" }}>
+                                        <select className="form-control form-control-sm" onChange={(e) => { handleUpdateSelect(e, value.id); }} style={{ "width": "120px" }}>
                                             {
                                                 value.preco_venda.map(function (str, index) {
                                                     return <option key={index} value={parseFloat(str.value)}>{str.label}</option>;

@@ -4,7 +4,7 @@ import { Form, Button, Container, Modal } from 'react-bootstrap';
 import Product from '../../components/Product/Product.jsx';
 import OrderGrid from '../../components/OrderGrid/OrderGrid.jsx';
 import Logo from '../../components/Logo/Logo.jsx';
-import SearchConsumer from '../../components/SearchConsumer/SearchConsumer.jsx';
+import SearchPerson from '../../components/SearchPerson/SearchPerson.jsx';
 
 function Sales() {
     const [show, setShow] = useState(false);
@@ -25,8 +25,8 @@ function Sales() {
 
             <Container>
                 <Form.Row className="d-flex flex-nowrap">
-                    <SearchConsumer label="Cliente" />
-                    <SearchConsumer label="Vendedor" />
+                    <SearchPerson label="Cliente" />
+                    <SearchPerson label="Vendedor" />
                     <Form.Group className="d-flex align-items-end col-md-2">
                         <Button variant="primary" onClick={handleShow}>
                             Pesquisar item

@@ -3,68 +3,46 @@ import React, { useCallback, useRef, useState } from 'react';
 import ProductService from '../../http/Product.js';
 import Order from '../../http/Order.js';
 
-import './Product.css';
-
 const Product = () => {
     const tableRef = useRef(null);
-
-    /** @var {Object} */
-    const [args, setArgs] = useState({
+    const [formData, setFormData] = useState({
         fabricante: '',
         tipo: '',
         sub_descricao: '',
         obs: ''
     });
-
-    /** @var {Number} */
     const [rowSelected, setRowSelected] = useState(0);
-
-    /** @var {Array} */
     const [products, setProducts] = useState([]);
 
-    /**
-     * setArgs
-     * 
-     * @param {Object} e
-     */
     const handleChange = useCallback((e) => {
-        setArgs({ [e.target.name]: e.target.value });
+        setFormData({ [e.target.name]: e.target.value });
     }, []);
 
-    /**
-     * getProducts
-     * 
-     * @param {Object} e 
-     */
     const getProducts = useCallback(async (e) => {
         e.preventDefault();
 
-        let elements = Object.entries(args).map(function (arr) {
+        let elements = Object.entries(formData).map(function (arr) {
             return (arr[1].length > 0) ? `${arr[0]}=${arr[1].toUpperCase()}` : '';
         });
 
         const urlParams = elements.filter(n => n).join('&');
         const response = await (new ProductService()).get(urlParams);
-        const products = response.data;
+        const productsData = response.data;
 
-        setProducts(products);
+        setProducts(productsData);
 
-        if (Object.keys(products).length) {
-            const StrHTMLComponent = `tr[data-id="${products[0].id}"]`;
+        if (Object.keys(productsData).length) {
+            const productId = productsData[0].id;
+            const tableRow = tableRef.current.querySelector(`tbody tr[data-id="${productId}"]`);
 
-            document.querySelector(StrHTMLComponent).focus();
+            tableRow.focus();
         }
-    }, [args]);
+    }, [formData]);
 
-    /**
-     * addProductToCart
-     * 
-     * @param {Integer} id 
-     */
     const addProductToCart = useCallback((id) => {
-        const str = `Adicionar produto #${id} ao carrinho?`;
+        const message = `Adicionar produto #${id} ao carrinho?`;
 
-        if (window.confirm(str)) {
+        if (window.confirm(message)) {
             const request = (new Order()).create(id);
 
             request.then(response => {
@@ -107,7 +85,7 @@ const Product = () => {
     }, [addProductToCart, products, rowSelected]);
 
     return (
-        <>
+        <div className="page-modal">
             <div>
                 <form onSubmit={getProducts}>
                     <div className="form-row pl-1 pt-1">
@@ -175,7 +153,7 @@ const Product = () => {
                     </tbody>
                 </table>
             </div>
-        </>
+        </div>
     )
 }
 

@@ -1,10 +1,10 @@
 import React from 'react';
 
-import LogoIcon from './../../images/2020-09-16.png';
+import LogoIcon from './../../images/logo.svg';
 
 function Logo() {
     return (
-        <img src={LogoIcon} alt="Logo" style={{ "height": "80px", "width": "100px" }} />
+        <img src={LogoIcon} alt="Logo" className="img-fluid" style={{height: '60px'}} />
     );
 }
 
