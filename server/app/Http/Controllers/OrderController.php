@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -16,9 +17,38 @@ class OrderController extends Controller
     {
         $order = new \App\Models\Order();
 
-        $data = $order->leftJoin('products', 'products.id', '=', 'orders.product_id');
+        $products = $order->leftJoin('products', 'products.id', '=', 'orders.product_id')->get();
 
-        return response()->json($data->get());
+        foreach($products as $product) {
+            $product->total_venda = 0;
+            $price = $product->preco_venda;
+            $product->total_venda = $product->quantity * $product->preco_venda;
+
+            $product->preco_venda = [
+                [
+                    "value" => $price * 1.00,
+                    "label" => ($price * 1.00) ." -> 0%",
+                    "selected" => true
+                ],
+                [
+                    "value" => $price * 0.96,
+                    "label" => ($price * 0.96) ." -> 4%",
+                    "selected" => false
+                ],
+                [
+                    "value" => $price * 0.92,
+                    "label" => ($price * 0.92) ." -> 8%",
+                    "selected" => false
+                ],
+                [
+                    "value" => 0.00,
+                    "label" => "--OUTROS--",
+                    "selected" => false
+                ],
+            ];
+        }
+
+        return response()->json($products);
     }
 
     /**
@@ -39,20 +69,46 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        $data = \App\Models\Order::where('product_id', $request->id);
+        $order = Order::where('product_id', $request->id)->first();
 
-        $p = $data->first();
-
-        if (empty($p)) {
-            $order = new \App\Models\Order();
-
+        if ($order) {
+            $order->quantity += 1;
+        } else {
+            $order = new Order();
             $order->product_id = $request->id;
             $order->quantity = 1;
-
-            $data = $order->save();
         }
 
-        return response()->json([]);
+        $order->save();
+        $product = Product::find($order->product_id);
+        $product->quantity = $order->quantity;
+        $product->total_venda = $product->quantity * $product->preco_venda;
+        $price = $product->preco_venda;
+
+        $product->preco_venda = [
+            [
+                "value" => $price * 1.00,
+                "label" => ($price * 1.00) ." -> 0%",
+                "selected" => true
+            ],
+            [
+                "value" => $price * 0.96,
+                "label" => ($price * 0.96) ." -> 4%",
+                "selected" => false
+            ],
+            [
+                "value" => $price * 0.92,
+                "label" => ($price * 0.92) ." -> 8%",
+                "selected" => false
+            ],
+            [
+                "value" => $price * 0.00,
+                "label" => "--OUTROS--",
+                "selected" => false
+            ],
+        ];
+
+        return response()->json($product);
     }
 
     /**

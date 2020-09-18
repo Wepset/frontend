@@ -1,5 +1,6 @@
 import React, { useCallback, useRef, useState } from 'react';
 
+import { useProducts } from '../../hooks/products';
 import ProductService from '../../http/Product.js';
 import Order from '../../http/Order.js';
 
@@ -12,13 +13,14 @@ const Product = () => {
         obs: ''
     });
     const [rowSelected, setRowSelected] = useState(0);
-    const [products, setProducts] = useState([]);
+    const [productList, setProductList] = useState([]);
+    const {products, setProducts } = useProducts();
 
     const handleChange = useCallback((e) => {
         setFormData({ [e.target.name]: e.target.value });
     }, []);
 
-    const getProducts = useCallback(async (e) => {
+    const getProductList = useCallback(async (e) => {
         e.preventDefault();
 
         let elements = Object.entries(formData).map(function (arr) {
@@ -29,7 +31,7 @@ const Product = () => {
         const response = await (new ProductService()).get(urlParams);
         const productsData = response.data;
 
-        setProducts(productsData);
+        setProductList(productsData);
 
         if (Object.keys(productsData).length) {
             const productId = productsData[0].id;
@@ -39,33 +41,40 @@ const Product = () => {
         }
     }, [formData]);
 
-    const addProductToCart = useCallback((id) => {
-        const message = `Adicionar produto #${id} ao carrinho?`;
-
-        if (window.confirm(message)) {
-            const request = (new Order()).create(id);
-
-            request.then(response => {
-                console.log(response);
-            }).catch(err => {
-                console.log(err);
+    const addProductToCart = useCallback((product) => {
+        const message = `O item ${product.tipo} ${product.sub_descricao} ${product.marca} já foi adicionado, deseja aumentar a quantidade?`;
+        const productIndex = products.findIndex(currentProduct => currentProduct.id === product.id);
+        const order = new Order();
+        
+        if (productIndex < 0) {
+            order.create(product.id).then(response => {
+                setProducts([...products, response.data]);
             });
+        } else {
+            if (window.confirm(message)) {
+                order.create(product.id).then(response => {
+                    const productsSwap = [...products];
+                    productsSwap[productIndex] =  response.data;
+                    setProducts(productsSwap);
+                });
+            }
         }
-    }, []);
+
+    }, [products, setProducts]);
 
     const moveCursor = useCallback((e) => {
         const ENTER = 13;
         const UP = 38;
         const DOWN = 40;
 
-        const productId = products[rowSelected].id;
-        const tableRow = tableRef.current.querySelector(`tbody tr[data-id="${productId}"]`);
+        const product = productList[rowSelected];
+        const tableRow = tableRef.current.querySelector(`tbody tr[data-id="${product.id}"]`);
 
         tableRow.focus();
 
         switch (e.keyCode) {
             case ENTER:
-                addProductToCart(productId);
+                addProductToCart(product);
                 break;
             case UP:
                 if (rowSelected > 0) {
@@ -74,7 +83,7 @@ const Product = () => {
 
                 break;
             case DOWN:
-                if ((rowSelected + 1) < products.length) {
+                if ((rowSelected + 1) < productList.length) {
                     setRowSelected(rowSelected + 1);
                 }
 
@@ -82,12 +91,12 @@ const Product = () => {
             default:
                 break;
         }
-    }, [addProductToCart, products, rowSelected]);
+    }, [addProductToCart, productList, rowSelected]);
 
     return (
         <div className="page-modal">
             <div>
-                <form onSubmit={getProducts}>
+                <form onSubmit={getProductList}>
                     <div className="form-row pl-1 pt-1">
                         <div className="col">
                             <input type="text" onChange={handleChange} className="form-control" placeholder="Fabricante" name="fabricante" />
@@ -131,7 +140,7 @@ const Product = () => {
                     </thead>
                     <tbody>
                         {
-                            products.map(function (product, index) {
+                            productList.map(function (product, index) {
                                 return (
                                     <tr key={product.id} data-id={product.id} tabIndex={index} className={index === rowSelected ? 'table-success' : 'table-light'}>
                                         <td>{product.id}</td>

@@ -1,11 +1,13 @@
 import React, { useCallback, useState, useEffect } from 'react';
 
+import { useProducts } from '../../hooks/products';
 import Icon from '../Icon/Icon.jsx';
 import Order from '../../http/Order.js';
 
 function OrderGrid() {
+    const { products, setProducts } = useProducts();
+
     const [formFields, setFormFields] = useState({
-        products: [],
         registers: {
             quantity: 0,
             value: 0.0
@@ -22,66 +24,15 @@ function OrderGrid() {
      * @param {Void}
      */
     const handleProducts = useCallback(() => {
-        ((new Order()).index()).then(response => {
-            let products_form = response.data;
+        const order = new Order();
 
-            products_form.map(function (arr) {
-                arr.selected = false;
-                arr.total_venda = 0.0;
-                arr.quantity = 0;
+        order.index().then(response => {
+            const productsList = response.data;
+            setProducts(productsList);
 
-                const price = parseFloat(arr.preco_venda).toFixed(2);
 
-                let prices = [
-                    { value: (price * 1.00).toFixed(2), label: `${(price * 1.00).toFixed(2)} -> 0%`, selected: true },
-                    { value: (price * 0.96).toFixed(2), label: `${(price * 0.96).toFixed(2)} -> 4%`, selected: false },
-                    { value: (price * 0.92).toFixed(2), label: `${(price * 0.92).toFixed(2)} -> 8%`, selected: false },
-                    { value: (0.0.toFixed(2)), label: `--OUTROS--`, selected: false }
-                ];
-
-                arr.preco_venda = prices;
-
-                return arr;
-            });
-
-            setFormFields({
-                products: products_form,
-                registers: {
-                    quantity: products_form.length,
-                    value: 0.0
-                },
-                selected: {
-                    quantity: 0,
-                    value: 0.0
-                }
-            })
         });
-    }, []);
-
-    /**
-     * Set the totals into the form.
-     * 
-     * @param {Void}
-     */
-    const handleUpdates = useCallback(() => {
-        const selects = formFields.products.reduce((sum, products) => (products.selected === true) ? parseInt(sum + 1) : parseInt(sum), 0);
-        const totals = formFields.products.length;
-
-        const total_selects = formFields.products.reduce((sum, products) => (products.selected === true) ? parseFloat(sum + products.total_venda) : parseFloat(sum), 0);
-        const total_registers = formFields.products.reduce((sum, products) => parseFloat(sum + products.total_venda), 0);
-
-        setFormFields({
-            products: formFields.products,
-            registers: {
-                quantity: totals,
-                value: total_registers.toFixed(2)
-            },
-            selected: {
-                quantity: selects,
-                value: total_selects.toFixed(2)
-            }
-        });
-    },  [formFields.products]);
+    }, [setProducts]);
 
     /**
      * Update totals on checkbox click.
@@ -90,20 +41,16 @@ function OrderGrid() {
      * @param {Float} value 
      */
     const handleSetterCheckbox = useCallback((id, value) => {
-        const updatedProducts = formFields.products.map(function (arr) {
-            if (arr.id === id) {
-                arr.selected = value;
+        const updatedProducts = products.map(function (currentProduct) {
+            if (currentProduct.id === id) {
+                currentProduct.selected = value;
             }
 
-            return arr;
+            return currentProduct;
         });
 
-        setFormFields({
-            products: updatedProducts,
-            registers: formFields.registers,
-            selected: formFields.selected
-        });
-    }, [formFields.products, formFields.registers, formFields.selected]);
+        setProducts(updatedProducts);
+    }, [products, setProducts]);
 
     /**
      * Update totals on change quantity input.
@@ -112,42 +59,36 @@ function OrderGrid() {
      * @param {Integer} quantity 
      */
     const updateTotalSale = useCallback(() => {
-        const updatedProducts = formFields.products.map(function (arr) {
+        const updatedProducts = products.map(function (product) {
             let price = 0;
 
-            arr.preco_venda.forEach(function (value, index, array) {
-                if (value.selected === true) {
-                    price = value.value;
+            product.preco_venda.forEach(function (currentPrice) {
+                if (currentPrice.selected === true) {
+                    price = currentPrice.value;
                 }
             });
 
-            arr.total_venda = arr.quantity * price;
+            product.total_venda = product.quantity * price;
 
-            return arr;
+            return product;
         });
 
-        setFormFields({
-            products: updatedProducts,
-            registers: formFields.registers,
-            selected: formFields.selected
-        });
-    }, [formFields.products, formFields.registers, formFields.selected]);
+        setProducts(updatedProducts);
+    }, [products, setProducts]);
 
-    const handleUpdateSelect = useCallback((e, id) => {
-        let produtsSwap = formFields.products;
-        let newValue = e.target.value;
-
-        produtsSwap.map(function (arr, idx) {
-            if (arr.id === id) {
+    const handleUpdateSelect = useCallback((e, product) => {
+        const newProductValue = e.target.value;
+        const produtsSwap = products.map(function (currentProduct) {
+            if (currentProduct.id === product.id) {
                 let element_id = 0;
 
-                arr.preco_venda.forEach(function (value, index, array) {
-                    if (parseFloat(newValue) === parseFloat(value.value)) {
+                currentProduct.preco_venda.forEach(function (value, index) {
+                    if (parseFloat(newProductValue) === parseFloat(value.value)) {
                         element_id = index;
                     }
                 });
 
-                arr.preco_venda.forEach(function (value, index, array) {
+                currentProduct.preco_venda.forEach(function (value, index) {
                     if (index === element_id) {
                         value.selected = true;
                     } else {
@@ -158,41 +99,56 @@ function OrderGrid() {
                 });
             }
 
-            return arr;
+            return currentProduct;
         });
 
-        setFormFields({
-            products: produtsSwap,
-            registers: formFields.registers,
-            selected: formFields.selected
-        });
+        setProducts(produtsSwap);
 
-        updateTotalSale();
+        // setFormFields({
+        //     products: produtsSwap,
+        //     registers: formFields.registers,
+        //     selected: formFields.selected
+        // });
 
-        handleUpdates();
-    }, [formFields.products, formFields.registers, formFields.selected, handleUpdates, updateTotalSale]);
+        // updateTotalSale();
 
-    const updateQuantity = useCallback((id, e) => {
-        let productsSwap = formFields.products;
+        // handleUpdates();
+    }, [products, setProducts]);
 
-        productsSwap.map(function (arr, index) {
-            if (arr.id === id) {
-                arr.quantity = e.target.value;
+    const updateQuantity = useCallback((e, product) => {
+        const productsSwap = products.map(function (currentProduct) {
+            if (currentProduct.id === product.id) {
+                currentProduct.quantity = e.target.value;
             }
 
-            return arr;
+            return currentProduct;
         });
 
-        setFormFields({
-            products: productsSwap,
-            registers: formFields.registers,
-            selected: formFields.selected
-        });
-    }, [formFields.products, formFields.registers, formFields.selected]);
+        setProducts(productsSwap);
+    }, [setProducts, products]);
 
-    useEffect(function () {
+    useEffect(() => {
         handleProducts();
     }, [handleProducts]);
+
+    useEffect(() => {
+        const selects = products.reduce((sum, products) => (products.selected === true) ? parseInt(sum + 1) : parseInt(sum), 0);
+        const totals = products.length;
+
+        const total_selects = products.reduce((sum, products) => (products.selected === true) ? parseFloat(sum + products.total_venda) : parseFloat(sum), 0);
+        const total_registers = products.reduce((sum, products) => parseFloat(sum + products.total_venda), 0);
+
+        setFormFields({
+            registers: {
+                quantity: totals,
+                value: total_registers.toFixed(2)
+            },
+            selected: {
+                quantity: selects,
+                value: total_selects.toFixed(2)
+            }
+        });
+    }, [products]);
 
     return (
         <div>
@@ -223,45 +179,48 @@ function OrderGrid() {
                 </thead>
                 <tbody>
                     {
-                        (formFields.products).map(function (value, index, array) {
+                        (products).map(function (product) {
                             return (
-                                <tr key={value.id}>
+                                <tr key={product.id}>
                                     <td className="d-flex align-items-center">
                                         <Icon label="icon L1C2" alt="Delete Icon" />
-                                        <input type="checkbox" className="ml-1" onClick={(e) => { handleSetterCheckbox(value.id, e.target.checked); handleUpdates(); }} value={value.selected} />
+                                        <input type="checkbox" className="ml-1" onClick={(e) => { handleSetterCheckbox(product.id, e.target.checked); }} value={product.selected} />
                                     </td>
-                                    <td>{value.id}</td>
-                                    <td>{new Date(value.created_at).toISOString().replace(/T/, ' ').replace(/\..+/, '')}</td>
-                                    <td>{value.fabricante}</td>
-                                    <td>{value.medida}</td>
-                                    <td>{value.tipo}</td>
-                                    <td>{(value.sub_descricao).substr(0, 5)}</td>
-                                    <td>{(value.obs).substr(0, 5)}</td>
-                                    <td>{(value.marca).substr(0, 5)}</td>
+                                    <td>{product.id}</td>
+                                    <td>{new Date(product.created_at).toISOString().replace(/T/, ' ').replace(/\..+/, '')}</td>
+                                    <td>{product.fabricante}</td>
+                                    <td>{product.medida}</td>
+                                    <td>{product.tipo}</td>
+                                    <td>{(product.sub_descricao).substr(0, 5)}</td>
+                                    <td>{(product.obs).substr(0, 5)}</td>
+                                    <td>{(product.marca).substr(0, 5)}</td>
                                     <td>0,00</td>
-                                    <td>{value.un}</td>
+                                    <td>{product.un}</td>
                                     <td>100</td>
                                     <td>100</td>
                                     <td>
-                                        <input type="text" onChange={(e) => { updateQuantity(value.id, e); updateTotalSale(); handleUpdates(); }} style={{ "width": "75px" }} aria-label="Quantity" className="form-control form-control-sm" value={value.qtd} />
+                                        <input type="text" onChange={(e) => {
+                                            updateQuantity(e, product);
+                                            updateTotalSale();
+                                        }} style={{ "width": "75px" }} aria-label="Quantity" className="form-control form-control-sm" value={product.quantity} />
                                     </td>
                                     <td>
-                                        <select className="form-control form-control-sm" onChange={(e) => { handleUpdateSelect(e, value.id); }} style={{ "width": "120px" }}>
+                                        <select className="form-control form-control-sm" onChange={(e) => { handleUpdateSelect(e, product); }} style={{ "width": "120px" }}>
                                             {
-                                                value.preco_venda.map(function (str, index) {
-                                                    return <option key={index} value={parseFloat(str.value)}>{str.label}</option>;
+                                                product.preco_venda.map(function (price, index) {
+                                                    return <option key={index} value={parseFloat(price.value)}>{price.label}</option>;
                                                 })
                                             }
                                         </select>
                                     </td>
-                                    <td>{(value.total_venda).toFixed(2)}</td>
-                                    <td>{value.quantity}</td>
+                                    <td>{(product.total_venda).toFixed(2)}</td>
+                                    <td>{product.quantity}</td>
                                     <td>0.00</td>
                                     <td>
                                         {
-                                            value.preco_venda.map(function (str, index) {
-                                                if (str.selected) {
-                                                    return str.value;
+                                            product.preco_venda.map(function (price) {
+                                                if (price.selected) {
+                                                    return price.value;
                                                 }
 
                                                 return ''

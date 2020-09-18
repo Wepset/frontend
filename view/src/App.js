@@ -1,17 +1,19 @@
 import React from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 
-import Sales from './pages/Sales/Sales.jsx';
+import Routes from './Routes';
+import AppProvider from './hooks';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Switch>
-        <Route path="/" exact={true} component={Sales} />
-      </Switch>
-    </BrowserRouter>
+    <Router>
+      <AppProvider>
+        <Routes />
+      </AppProvider>
+    </Router>
   );
 }
 
