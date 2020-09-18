@@ -19,10 +19,18 @@ class ConsumerController extends Controller
     {
         $consumer = Consumer::query();
 
-        foreach ($request->all() as $key => $arg) {
-            $consumer->where(strtolower($key), 'like', "%{$arg}%");
-        }
+        $args = $request->all();
 
-        return response()->json($consumer->get());
+        $id = isset($args['id']) ? (int) $args['id'] : 0;
+
+        if ($id > 0) {
+            return response()->json($consumer->where('id', $id)->get());
+        } else {
+            foreach ($request->all() as $key => $arg) {
+                $consumer->where(strtolower($key), 'like', "%{$arg}%");
+            }
+
+            return response()->json($consumer->get());
+        }
     }
 }

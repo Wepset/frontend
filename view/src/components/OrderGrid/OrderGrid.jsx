@@ -204,7 +204,7 @@ function OrderGrid() {
                                         }} style={{ "width": "75px" }} aria-label="Quantity" className="form-control form-control-sm" value={product.quantity} />
                                     </td>
                                     <td>
-                                        <select className="form-control form-control-sm" onChange={(e) => { handleUpdateSelect(e, product); }} style={{ "width": "120px" }}>
+                                        <select className="form-control form-control-sm" onChange={(e) => { handleUpdateSelect(e, product); updateTotalSale(); }} style={{ "width": "120px" }}>
                                             {
                                                 product.preco_venda.map(function (price, index) {
                                                     return <option key={index} value={parseFloat(price.value)}>{price.label}</option>;

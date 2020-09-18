@@ -5,11 +5,13 @@ import { AiOutlineSolution } from 'react-icons/ai';
 
 import Person from '../../components/Person/Person.jsx';
 
+import PersonService from '../../http/Person';
+
 import { useProducts } from '../../hooks/products';
 import { useEffect } from 'react';
 
-function SearchPeople({label, type}) {
-    const {setCustomer, setSeller} = useProducts();
+function SearchPeople({ label, type }) {
+    const { setCustomer, setSeller } = useProducts();
     const [personField, setPersonField] = useState('');
     const [person, setPerson] = useState({});
     const [show, setShow] = useState(false);
@@ -22,11 +24,28 @@ function SearchPeople({label, type}) {
     }, []);
 
     const handleBlur = useCallback((e) => {
-        // faz requisição na API por código se retornar uma pessoa OK
-        // setPerson(person);
-        // setPersonField(person.razao_social_nome);
-        // senão abre o modal
-        // setShow(true);
+        const stringSearched = e.target.value.toUpperCase();
+
+        const regexSearch = stringSearched.match(/^\d+$/);
+
+        let queryString = ``;
+
+        if (regexSearch) {
+            queryString = `id=${stringSearched}`;
+        } else {
+            queryString = `razao_social_nome=${stringSearched}`;
+        }
+
+        const person = new PersonService();
+
+        person.get(queryString).then(response => {
+            if (response.data.length === 1) {
+                setPerson(response.data[0]);
+                setPersonField(response.data[0].razao_social_nome);
+            } else {
+                setShow(true);
+            }
+        });
     }, []);
 
     const informeParent = (selectedPerson) => {
