@@ -5,11 +5,43 @@ import { AiOutlineSolution } from 'react-icons/ai';
 
 import Person from '../../components/Person/Person.jsx';
 
-function SearchPeople(props) {
+import { useProducts } from '../../hooks/products';
+import { useEffect } from 'react';
+
+function SearchPeople({label, type}) {
+    const {setCustomer, setSeller} = useProducts();
+    const [personField, setPersonField] = useState('');
+    const [person, setPerson] = useState({});
     const [show, setShow] = useState(false);
 
     const handleClose = useCallback(() => setShow(false), []);
     const handleShow = useCallback(() => setShow(true), []);
+
+    const handleChange = useCallback((e) => {
+        setPersonField(e.target.value);
+    }, []);
+
+    const handleBlur = useCallback((e) => {
+        // faz requisição na API por código se retornar uma pessoa OK
+        // setPerson(person);
+        // setPersonField(person.razao_social_nome);
+        // senão abre o modal
+        // setShow(true);
+    }, []);
+
+    const informeParent = (selectedPerson) => {
+        setPerson(selectedPerson);
+        setPersonField(selectedPerson.razao_social_nome);
+        handleClose();
+    };
+
+    useEffect(() => {
+        if (type.toLowerCase() === 'customer') {
+            setCustomer(person);
+        } else if (type.toLowerCase() === 'seller') {
+            setSeller(person);
+        }
+    }, [person, type, setCustomer, setSeller]);
 
     return (
         <>
@@ -18,13 +50,13 @@ function SearchPeople(props) {
                     <Modal.Title>Dados para a Busca</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Person />
+                    <Person informeParent={informeParent} />
                 </Modal.Body>
             </Modal>
 
             <Form.Group as={Form.Col}>
-                <Form.Label className="mr-2">{props.label}</Form.Label>
-                <Form.Control type="text" placeholder={`Informe o ${props.label}`} />
+                <Form.Label className="mr-2">{label}</Form.Label>
+                <Form.Control type="text" placeholder={`Informe o ${label}`} onBlur={handleBlur} onChange={handleChange} value={personField} />
             </Form.Group>
 
             <Form.Group className="d-flex align-items-end col-md-1">

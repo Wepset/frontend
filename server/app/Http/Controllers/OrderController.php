@@ -151,8 +151,9 @@ class OrderController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Order $order)
+    public function destroy(int $id)
     {
-        //
+        $order = Order::where('product_id', $id)->first();
+        $order->delete();
     }
 }

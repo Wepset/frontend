@@ -2,9 +2,9 @@ import React from 'react';
 
 import img from '../../images/db_icones.png';
 
-function Icon(props) {
+function Icon({ label, alt, ...rest}) {
     return (
-        <img src={img} className={props.label} alt={props.alt} />
+        <img src={img} className={label} alt={alt} {...rest} />
     );
 }
 

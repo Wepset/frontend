@@ -2,13 +2,17 @@ import React, { createContext, useContext, useState } from 'react';
 
 const ProductsContext = createContext({
   products: [],
+  seller: {},
+  customer: {},
 });
 
 export function ProductsProvider({ children }) {
   const [products, setProducts] = useState([]);
+  const [seller, setSeller] = useState({});
+  const [customer, setCustomer] = useState({});
 
   return (
-    <ProductsContext.Provider value={{products, setProducts}}>
+    <ProductsContext.Provider value={{products, setProducts, seller, setSeller, customer, setCustomer}}>
       {children}
     </ProductsContext.Provider>
   );

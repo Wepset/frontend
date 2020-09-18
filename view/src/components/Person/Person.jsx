@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 
 import PersonService from '../../http/Person.js';
 
-const Person = () => {
+const Person = ({ informeParent = f => f }) => {
     const [formData, setFormData] = useState({
         fantasia: '',
         razao_social_nome: '',
@@ -67,7 +67,7 @@ const Person = () => {
                     <tbody>
                         {people.map(function (person) {
                             return (
-                                <tr key={person.id}>
+                                <tr key={person.id} onClick={() => informeParent(person) }>
                                     <td>{person.id}</td>
                                     <td>{person.codigo}</td>
                                     <td>{person.razao_social_nome}</td>

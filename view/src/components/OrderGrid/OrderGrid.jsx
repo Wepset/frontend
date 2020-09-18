@@ -3,6 +3,7 @@ import React, { useCallback, useState, useEffect } from 'react';
 import { useProducts } from '../../hooks/products';
 import Icon from '../Icon/Icon.jsx';
 import Order from '../../http/Order.js';
+import api from '../../service/api';
 
 function OrderGrid() {
     const { products, setProducts } = useProducts();
@@ -103,16 +104,6 @@ function OrderGrid() {
         });
 
         setProducts(produtsSwap);
-
-        // setFormFields({
-        //     products: produtsSwap,
-        //     registers: formFields.registers,
-        //     selected: formFields.selected
-        // });
-
-        // updateTotalSale();
-
-        // handleUpdates();
     }, [products, setProducts]);
 
     const updateQuantity = useCallback((e, product) => {
@@ -126,6 +117,14 @@ function OrderGrid() {
 
         setProducts(productsSwap);
     }, [setProducts, products]);
+
+    const deleteProduct = useCallback(async product => {
+        const productsSwap = [...products];
+        const productIndex = products.findIndex(p => p.id === product.id);
+        productsSwap.splice(productIndex, 1);
+        setProducts(productsSwap);
+        await api.delete(`/orders/${product.id}`);
+    }, [products, setProducts]);
 
     useEffect(() => {
         handleProducts();
@@ -183,7 +182,7 @@ function OrderGrid() {
                             return (
                                 <tr key={product.id}>
                                     <td className="d-flex align-items-center">
-                                        <Icon label="icon L1C2" alt="Delete Icon" />
+                                        <Icon label="icon L1C2" alt="Delete Icon" onClick={() => deleteProduct(product) } />
                                         <input type="checkbox" className="ml-1" onClick={(e) => { handleSetterCheckbox(product.id, e.target.checked); }} value={product.selected} />
                                     </td>
                                     <td>{product.id}</td>

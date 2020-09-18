@@ -25,8 +25,8 @@ function Sales() {
 
             <Container>
                 <Form.Row className="d-flex flex-nowrap">
-                    <SearchPerson label="Cliente" />
-                    <SearchPerson label="Vendedor" />
+                    <SearchPerson label="Cliente" type="customer" />
+                    <SearchPerson label="Vendedor" type="seller" />
                     <Form.Group className="d-flex align-items-end col-md-2">
                         <Button variant="primary" onClick={handleShow}>
                             Pesquisar item
