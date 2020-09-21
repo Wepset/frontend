@@ -35,6 +35,7 @@ function OrderGrid() {
                 product.marca = product.marca.substr(0, 5);
                 product.sub_descricao = product.sub_descricao.substr(0, 5);
                 product.total_venda.toFixed(2);
+                product.stock = Math.floor(Math.random() * 100);
 
                 return product;
             });
@@ -42,6 +43,15 @@ function OrderGrid() {
             setProducts(productsList);
         });
     }, [setProducts]);
+
+    /**
+     * Sort the data on click.
+     * 
+     * @param {Object} e
+     */
+    const handleSorting = useCallback((e) => {
+        console.log(e);
+    }, []);
 
     /**
      * Update totals on checkbox click.
@@ -164,8 +174,8 @@ function OrderGrid() {
                     <tr>
                         <th scope="col"></th>
                         <th scope="col">#</th>
-                        <th scope="col">DATA</th>
-                        <th scope="col">FABRICANTE</th>
+                        <th scope="col" className={"cursor-pointer"} onClick={handleSorting}>DATA</th>
+                        <th scope="col" className={"cursor-pointer"} onClick={handleSorting}>FABRICANTE</th>
                         <th scope="col">MED</th>
                         <th scope="col">TIPO</th>
                         <th scope="col">SUB DESC</th>
@@ -201,9 +211,9 @@ function OrderGrid() {
                                     <td>{product.sub_descricao}</td>
                                     <td>{product.obs}</td>
                                     <td>{product.marca}</td>
-                                    <td>0,00</td>
+                                    <td>{product.qtd_multipla_venda}</td>
                                     <td>{product.un}</td>
-                                    <td>100</td>
+                                    <td>{product.stock}</td>
                                     <td>100</td>
                                     <td>
                                         <input type="text" onChange={(e) => {

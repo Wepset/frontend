@@ -76,3 +76,7 @@ td, th {
   word-wrap: break-word;
   white-space: nowrap;
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}
