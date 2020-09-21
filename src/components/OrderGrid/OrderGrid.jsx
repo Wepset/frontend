@@ -29,9 +29,17 @@ function OrderGrid() {
 
         order.index().then(response => {
             const productsList = response.data;
+
+            productsList.map(function (product) {
+                product.obs = product.obs.substr(0, 10);
+                product.marca = product.marca.substr(0, 5);
+                product.sub_descricao = product.sub_descricao.substr(0, 5);
+                product.total_venda.toFixed(2);
+
+                return product;
+            });
+
             setProducts(productsList);
-
-
         });
     }, [setProducts]);
 
@@ -178,7 +186,7 @@ function OrderGrid() {
                 </thead>
                 <tbody>
                     {
-                        (products).map(function (product) {
+                        products.map(function (product) {
                             return (
                                 <tr key={product.id}>
                                     <td className="d-flex align-items-center">
@@ -186,13 +194,13 @@ function OrderGrid() {
                                         <input type="checkbox" className="ml-1" onClick={(e) => { handleSetterCheckbox(product.id, e.target.checked); }} value={product.selected} />
                                     </td>
                                     <td>{product.id}</td>
-                                    <td>{new Date(product.created_at).toISOString().replace(/T/, ' ').replace(/\..+/, '')}</td>
+                                    <td>{product.created_at}</td>
                                     <td>{product.fabricante}</td>
                                     <td>{product.medida}</td>
                                     <td>{product.tipo}</td>
-                                    <td>{(product.sub_descricao).substr(0, 5)}</td>
-                                    <td>{(product.obs).substr(0, 5)}</td>
-                                    <td>{(product.marca).substr(0, 5)}</td>
+                                    <td>{product.sub_descricao}</td>
+                                    <td>{product.obs}</td>
+                                    <td>{product.marca}</td>
                                     <td>0,00</td>
                                     <td>{product.un}</td>
                                     <td>100</td>
@@ -212,10 +220,10 @@ function OrderGrid() {
                                             }
                                         </select>
                                     </td>
-                                    <td>{(product.total_venda).toFixed(2)}</td>
+                                    <td>{product.total_venda}</td>
                                     <td>{product.quantity}</td>
                                     <td>0.00</td>
-                                    <td>{product.preco_venda.map(price => (price.selected) ? price.vaue : '')}</td>
+                                    <td>{product.preco_venda.map(price => (price.selected) ? price.value : '')}</td>
                                     <td>
                                         <Icon label="icon L11C3" alt="L11C3" />
                                         <Icon label="icon L6C4" alt="L6C4" />

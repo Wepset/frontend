@@ -78,7 +78,7 @@ function SearchPeople({ label, type }) {
                 <Form.Control type="text" placeholder={`Informe o ${label}`} onBlur={handleBlur} onChange={handleChange} value={personField} />
             </Form.Group>
 
-            <Form.Group className="d-flex align-items-end col-md-1">
+            <Form.Group className="d-flex align-items-end mr-1">
                 <span onClick={handleShow}>
                     <h3> <FiZoomIn /></h3>
                 </span>
