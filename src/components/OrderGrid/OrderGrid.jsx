@@ -182,7 +182,7 @@ function OrderGrid() {
                             return (
                                 <tr key={product.id}>
                                     <td className="d-flex align-items-center">
-                                        <Icon label="icon L1C2" alt="Delete Icon" onClick={() => deleteProduct(product) } />
+                                        <Icon label="icon L1C2" alt="Delete Icon" onClick={() => deleteProduct(product)} />
                                         <input type="checkbox" className="ml-1" onClick={(e) => { handleSetterCheckbox(product.id, e.target.checked); }} value={product.selected} />
                                     </td>
                                     <td>{product.id}</td>
@@ -215,17 +215,7 @@ function OrderGrid() {
                                     <td>{(product.total_venda).toFixed(2)}</td>
                                     <td>{product.quantity}</td>
                                     <td>0.00</td>
-                                    <td>
-                                        {
-                                            product.preco_venda.map(function (price) {
-                                                if (price.selected) {
-                                                    return price.value;
-                                                }
-
-                                                return ''
-                                            })
-                                        }
-                                    </td>
+                                    <td>{product.preco_venda.map(price => (price.selected) ? price.vaue : '')}</td>
                                     <td>
                                         <Icon label="icon L11C3" alt="L11C3" />
                                         <Icon label="icon L6C4" alt="L6C4" />

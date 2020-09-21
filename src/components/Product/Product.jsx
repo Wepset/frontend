@@ -14,7 +14,7 @@ const Product = () => {
     });
     const [rowSelected, setRowSelected] = useState(0);
     const [productList, setProductList] = useState([]);
-    const {products, setProducts } = useProducts();
+    const { products, setProducts } = useProducts();
 
     const handleChange = useCallback((e) => {
         setFormData({ [e.target.name]: e.target.value });
@@ -45,7 +45,7 @@ const Product = () => {
         const message = `O item ${product.tipo} ${product.sub_descricao} ${product.marca} já foi adicionado, deseja aumentar a quantidade?`;
         const productIndex = products.findIndex(currentProduct => currentProduct.id === product.id);
         const order = new Order();
-        
+
         if (productIndex < 0) {
             order.create(product.id).then(response => {
                 setProducts([...products, response.data]);
@@ -54,7 +54,7 @@ const Product = () => {
             if (window.confirm(message)) {
                 order.create(product.id).then(response => {
                     const productsSwap = [...products];
-                    productsSwap[productIndex] =  response.data;
+                    productsSwap[productIndex] = response.data;
                     setProducts(productsSwap);
                 });
             }
