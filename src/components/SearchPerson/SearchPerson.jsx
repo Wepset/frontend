@@ -42,11 +42,18 @@ function SearchPeople({ label, type }) {
             if (response.data.length === 1) {
                 setPerson(response.data[0]);
                 setPersonField(response.data[0].razao_social_nome);
+
+                /**
+                 * Nesse trecho precisamos setar o nome do vendedor no segundo input e forçar o evento de clique no botão.
+                 */
+                if (type === "customer") {
+                    document.querySelectorAll("input:nth-child(2)")[1].value = response.data[0].interno.razao_social_nome;
+                }
             } else {
                 setShow(true);
             }
         });
-    }, []);
+    }, [type]);
 
     const informeParent = (selectedPerson) => {
         setPerson(selectedPerson);
