@@ -48,37 +48,6 @@ function OrderGrid() {
     }, [setProducts]);
 
     /**
-     * Sort the data on click.
-     * 
-     * @param {Object} e
-     */
-    const handleSorting = useCallback((e) => {
-        let sortBy = e.target.dataset.sort;
-
-        let copyProducts = products;
-
-        function sortFunction(a, b) {
-            if (a[sortBy] === b[sortBy]) {
-                return 0;
-            } else {
-                if (sort.status) {
-                    return (a[sortBy] < b[sortBy]) ? -1 : 1;
-                } else {
-                    return (a[sortBy] > b[sortBy]) ? -1 : 1;
-                }
-            }
-        }
-
-        copyProducts.sort(sortFunction);
-
-        setSort({ status: !sort.status, name: sortBy });
-
-        setProducts(copyProducts);
-
-        updateTotalSale();
-    }, [products, setProducts]);
-
-    /**
      * Update totals on checkbox click.
      * 
      * @param {Integer} id 
@@ -119,6 +88,37 @@ function OrderGrid() {
 
         setProducts(updatedProducts);
     }, [products, setProducts]);
+
+    /**
+ * Sort the data on click.
+ * 
+ * @param {Object} e
+ */
+    const handleSorting = useCallback((e) => {
+        let sortBy = e.target.dataset.sort;
+
+        let copyProducts = products;
+
+        function sortFunction(a, b) {
+            if (a[sortBy] === b[sortBy]) {
+                return 0;
+            } else {
+                if (sort.status) {
+                    return (a[sortBy] < b[sortBy]) ? -1 : 1;
+                } else {
+                    return (a[sortBy] > b[sortBy]) ? -1 : 1;
+                }
+            }
+        }
+
+        copyProducts.sort(sortFunction);
+
+        setSort({ status: !sort.status, name: sortBy });
+
+        setProducts(copyProducts);
+
+        updateTotalSale();
+    }, [products, setProducts, sort, updateTotalSale]);
 
     const handleUpdateSelect = useCallback((e, product) => {
         const newProductValue = e.target.value;
