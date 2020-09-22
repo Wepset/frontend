@@ -214,7 +214,10 @@ function OrderGrid() {
                             <span data-sort={"fabricante"} onClick={handleSorting}>FABRICANTE</span>
                         </th>
 
-                        <th scope="col">MED</th>
+                        <th scope="col" className={"cursor-pointer"} >
+                            <Arrow display={sort.name === `medida`} direction={sort.status} />
+                            <span data-sort={"medida"} onClick={handleSorting}>MED</span>
+                        </th>
 
                         <th scope="col" className={"cursor-pointer"} >
                             <Arrow display={sort.name === `tipo`} direction={sort.status} />
