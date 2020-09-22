@@ -4,9 +4,12 @@ import { useProducts } from '../../hooks/products';
 import Icon from '../Icon/Icon.jsx';
 import Order from '../../http/Order.js';
 import api from '../../service/api';
+import Arrow from '../Arrow/Arrow';
 
 function OrderGrid() {
     const { products, setProducts } = useProducts();
+
+    const [sort, setSort] = useState({ name: 'id', status: false });
 
     const [formFields, setFormFields] = useState({
         registers: {
@@ -50,8 +53,30 @@ function OrderGrid() {
      * @param {Object} e
      */
     const handleSorting = useCallback((e) => {
-        console.log(e);
-    }, []);
+        let sortBy = e.target.dataset.sort;
+
+        let copyProducts = products;
+
+        function sortFunction(a, b) {
+            if (a[sortBy] === b[sortBy]) {
+                return 0;
+            } else {
+                if (sort.status) {
+                    return (a[sortBy] < b[sortBy]) ? -1 : 1;
+                } else {
+                    return (a[sortBy] > b[sortBy]) ? -1 : 1;
+                }
+            }
+        }
+
+        copyProducts.sort(sortFunction);
+
+        setSort({ status: !sort.status, name: sortBy });
+
+        setProducts(copyProducts);
+
+        updateTotalSale();
+    }, [products, setProducts]);
 
     /**
      * Update totals on checkbox click.
@@ -173,14 +198,44 @@ function OrderGrid() {
                 <thead>
                     <tr>
                         <th scope="col"></th>
-                        <th scope="col">#</th>
-                        <th scope="col" className={"cursor-pointer"} onClick={handleSorting}>DATA</th>
-                        <th scope="col" className={"cursor-pointer"} onClick={handleSorting}>FABRICANTE</th>
+
+                        <th scope="col" className={"cursor-pointer"} >
+                            <Arrow display={sort.name === `id`} direction={sort.status} />
+                            <span data-sort={"id"} onClick={handleSorting}>#</span>
+                        </th>
+
+                        <th scope="col" className={"cursor-pointer"} >
+                            <Arrow display={sort.name === `created_at`} direction={sort.status} />
+                            <span data-sort={"created_at"} onClick={handleSorting}>DATA</span>
+                        </th>
+
+                        <th scope="col" className={"cursor-pointer"} >
+                            <Arrow display={sort.name === `fabricante`} direction={sort.status} />
+                            <span data-sort={"fabricante"} onClick={handleSorting}>FABRICANTE</span>
+                        </th>
+
                         <th scope="col">MED</th>
-                        <th scope="col">TIPO</th>
-                        <th scope="col">SUB DESC</th>
-                        <th scope="col">OBS</th>
-                        <th scope="col">MARCA</th>
+
+                        <th scope="col" className={"cursor-pointer"} >
+                            <Arrow display={sort.name === `tipo`} direction={sort.status} />
+                            <span data-sort={"tipo"} onClick={handleSorting}>TIPO</span>
+                        </th>
+
+                        <th scope="col" className={"cursor-pointer"} >
+                            <Arrow display={sort.name === `sub_descricao`} direction={sort.status} />
+                            <span data-sort={"sub_descricao"} onClick={handleSorting}>SUB DESC</span>
+                        </th>
+
+                        <th scope="col" className={"cursor-pointer"} >
+                            <Arrow display={sort.name === `obs`} direction={sort.status} />
+                            <span data-sort={"obs"} onClick={handleSorting}>OBS</span>
+                        </th>
+
+                        <th scope="col" className={"cursor-pointer"} >
+                            <Arrow display={sort.name === `marca`} direction={sort.status} />
+                            <span data-sort={"marca"} onClick={handleSorting}>MARCA</span>
+                        </th>
+
                         <th scope="col">MV</th>
                         <th scope="col">UN</th>
                         <th scope="col">EST</th>
