@@ -1,6 +1,7 @@
 import React, { useCallback, useState, useEffect } from 'react';
-
-import { Form } from 'react-bootstrap';
+import DatePicker from "react-datepicker"; 
+import { FiCalendar } from 'react-icons/fi';
+import { ptBR } from 'date-fns/locale';
 
 import { useProducts } from '../../hooks/products';
 import Icon from '../Icon/Icon.jsx';
@@ -8,13 +9,16 @@ import Order from '../../http/Order.js';
 import api from '../../service/api';
 import Arrow from '../Arrow/Arrow';
 
+const CalendarButton = React.forwardRef(({ value, onClick }, ref) => (
+    <span ref={ref} onClick={onClick} className="h-100 px-2">
+        <FiCalendar style={{ marginTop: '-4px' }} />
+    </span>
+));
+
 function OrderGrid() {
     const { products, setProducts } = useProducts();
-
-    const [showDatePicker, setShowDatePicker] = useState(false);
-
+    const [startDate, setStartDate] = useState(new Date());
     const [sort, setSort] = useState({ name: 'id', status: false });
-
     const [formFields, setFormFields] = useState({
         registers: {
             quantity: 0,
@@ -196,10 +200,6 @@ function OrderGrid() {
         });
     }, [products]);
 
-    function handleDateclick() {
-        setShowDatePicker(!showDatePicker);
-    }
-
     return (
         <div>
             <table className="table table-hover table-sm">
@@ -218,13 +218,12 @@ function OrderGrid() {
                             <div className="d-flex align-items-center">
                                 <span data-sort={"created_at"} onClick={handleSorting}>DATA</span>
 
-                                <div onClick={handleDateclick} className="d-flex align-items-center">
-                                    <span>
-                                        <Icon label="icon L17C4" alt="L17C4" />
-                                    </span>
-
-                                    <Form.Control type="date" className={(showDatePicker === true) ? "d-block" : "d-none"} />
-                                </div>
+                                <DatePicker
+                                    selected={startDate}
+                                    onChange={date => setStartDate(date)}
+                                    locale={ptBR}
+                                    customInput={<CalendarButton />}
+                                />
                             </div>
                         </th>
 
