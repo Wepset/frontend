@@ -48,6 +48,13 @@ function SearchPeople({ label, type, ...rest }) {
                  */
                 if (type === "customer") {
                     document.querySelectorAll("input:nth-child(2)")[1].value = response.data[0].interno.razao_social_nome;
+
+                    setTimeout(() => {
+                        document.querySelector("button").click();
+                        setShow(false);
+                    }, 1000);
+
+                    setShow(false);
                 }
             } else {
                 setShow(true);
