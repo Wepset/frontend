@@ -1,5 +1,7 @@
 import React, { useCallback, useState, useEffect } from 'react';
 
+import { Form } from 'react-bootstrap';
+
 import { useProducts } from '../../hooks/products';
 import Icon from '../Icon/Icon.jsx';
 import Order from '../../http/Order.js';
@@ -8,6 +10,8 @@ import Arrow from '../Arrow/Arrow';
 
 function OrderGrid() {
     const { products, setProducts } = useProducts();
+
+    const [showDatePicker, setShowDatePicker] = useState(false);
 
     const [sort, setSort] = useState({ name: 'id', status: false });
 
@@ -192,6 +196,10 @@ function OrderGrid() {
         });
     }, [products]);
 
+    function handleDateclick() {
+        setShowDatePicker(!showDatePicker);
+    }
+
     return (
         <div>
             <table className="table table-hover table-sm">
@@ -206,7 +214,18 @@ function OrderGrid() {
 
                         <th scope="col" className={"cursor-pointer"} >
                             <Arrow display={sort.name === `created_at`} direction={sort.status} />
-                            <span data-sort={"created_at"} onClick={handleSorting}>DATA</span>
+
+                            <div className="d-flex align-items-center">
+                                <span data-sort={"created_at"} onClick={handleSorting}>DATA</span>
+
+                                <div onClick={handleDateclick} className="d-flex align-items-center">
+                                    <span>
+                                        <Icon label="icon L17C4" alt="L17C4" />
+                                    </span>
+
+                                    <Form.Control type="date" className={(showDatePicker === true) ? "d-block" : "d-none"} />
+                                </div>
+                            </div>
                         </th>
 
                         <th scope="col" className={"cursor-pointer"} >
