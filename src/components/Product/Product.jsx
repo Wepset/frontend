@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useProducts } from '../../hooks/products';
 import ProductService from '../../http/Product.js';
@@ -6,6 +6,7 @@ import Order from '../../http/Order.js';
 
 const Product = () => {
     const tableRef = useRef(null);
+    const manufacturerInput = useRef(null);
     const [formData, setFormData] = useState({
         fabricante: '',
         tipo: '',
@@ -46,6 +47,10 @@ const Product = () => {
         const productIndex = products.findIndex(currentProduct => currentProduct.id === product.id);
         const order = new Order();
 
+        const tableRow = tableRef.current.querySelector(`tbody tr[data-id="${product.id}"]`);
+        tableRow.focus();
+        setRowSelected(productList.findIndex(currentProduct => currentProduct.id === product.id));
+
         if (productIndex < 0) {
             order.create(product.id).then(response => {
                 setProducts([...products, response.data]);
@@ -60,19 +65,23 @@ const Product = () => {
             }
         }
 
-    }, [products, setProducts]);
+    }, [productList, products, setProducts]);
 
     const moveCursor = useCallback((e) => {
         const ENTER = 13;
+        const TAB = 9;
         const UP = 38;
         const DOWN = 40;
 
         const product = productList[rowSelected];
         const tableRow = tableRef.current.querySelector(`tbody tr[data-id="${product.id}"]`);
-
         tableRow.focus();
 
         switch (e.keyCode) {
+            case TAB:
+                e.preventDefault();
+                manufacturerInput.current.focus();
+                break;
             case ENTER:
                 addProductToCart(product);
                 break;
@@ -93,13 +102,17 @@ const Product = () => {
         }
     }, [addProductToCart, productList, rowSelected]);
 
+    useEffect(() => {
+        manufacturerInput.current.focus();
+    }, []);
+
     return (
         <div className="page-modal">
             <div>
                 <form onSubmit={getProductList}>
                     <div className="form-row pl-1 pt-1">
                         <div className="col">
-                            <input type="text" onChange={handleChange} className="form-control" placeholder="Fabricante" name="fabricante" />
+                            <input type="text" onChange={handleChange} className="form-control" placeholder="Fabricante" name="fabricante" ref={manufacturerInput} />
                         </div>
                         <div className="col">
                             <input type="text" onChange={handleChange} className="form-control" placeholder="Tipo" name="tipo" />
@@ -142,7 +155,7 @@ const Product = () => {
                         {
                             productList.map(function (product, index) {
                                 return (
-                                    <tr key={product.id} data-id={product.id} tabIndex={index} className={index === rowSelected ? 'table-success' : 'table-light'}>
+                                    <tr key={product.id} data-id={product.id} tabIndex={index} className={index === rowSelected ? 'table-success' : 'table-light'} onClick={() => addProductToCart(product)}>
                                         <td>{product.id}</td>
                                         <td>{product.fabricante}</td>
                                         <td>{product.medida}</td>

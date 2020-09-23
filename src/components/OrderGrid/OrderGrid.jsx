@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect, useRef } from 'react';
 import DatePicker from "react-datepicker"; 
 import { FiCalendar } from 'react-icons/fi';
 import { ptBR } from 'date-fns/locale';
@@ -15,8 +15,9 @@ const CalendarButton = React.forwardRef(({ value, onClick }, ref) => (
     </span>
 ));
 
-function OrderGrid() {
+function OrderGrid({ focusOnFirstInput }) {
     const { products, setProducts } = useProducts();
+    const table = useRef(null);
     const [startDate, setStartDate] = useState(new Date());
     const [sort, setSort] = useState({ name: 'id', status: false });
     const [formFields, setFormFields] = useState({
@@ -179,7 +180,14 @@ function OrderGrid() {
 
     useEffect(() => {
         handleProducts();
-    }, [handleProducts]);
+
+        if (focusOnFirstInput) {
+            const quantityInput = table.current.querySelector('tbody tr td input[data-type=quantity]');
+            if (quantityInput) {
+                setTimeout(() => quantityInput.focus(), 500);
+            }
+        }
+    }, [focusOnFirstInput, handleProducts]);
 
     useEffect(() => {
         const selects = products.reduce((sum, products) => (products.selected === true) ? parseInt(sum + 1) : parseInt(sum), 0);
@@ -202,7 +210,7 @@ function OrderGrid() {
 
     return (
         <div>
-            <table className="table table-hover table-sm">
+            <table className="table table-hover table-sm" ref={table}>
                 <thead>
                     <tr>
                         <th scope="col"></th>
@@ -295,7 +303,7 @@ function OrderGrid() {
                                         <input type="text" onChange={(e) => {
                                             updateQuantity(e, product);
                                             updateTotalSale();
-                                        }} style={{ "width": "75px" }} aria-label="Quantity" className="form-control form-control-sm" value={product.quantity} />
+                                        }} style={{ "width": "75px" }} aria-label="Quantity" data-type="quantity" className="form-control form-control-sm" value={product.quantity} />
                                     </td>
                                     <td>
                                         <select className="form-control form-control-sm" onChange={(e) => { handleUpdateSelect(e, product); updateTotalSale(); }} style={{ "width": "120px" }}>
@@ -306,7 +314,7 @@ function OrderGrid() {
                                             }
                                         </select>
                                     </td>
-                                    <td>{product.total_venda}</td>
+                                    <td>{product.total_venda.toFixed(2)}</td>
                                     <td>{product.quantity}</td>
                                     <td>0.00</td>
                                     <td>{product.preco_venda.map(price => (price.selected) ? price.value : '')}</td>
