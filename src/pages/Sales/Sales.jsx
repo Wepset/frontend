@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Form, Button, Container, Modal } from 'react-bootstrap';
 
 import Product from '../../components/Product/Product.jsx';

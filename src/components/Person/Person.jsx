@@ -49,7 +49,6 @@ const Person = ({ informeParent = f => f }) => {
                 <table className="table table-hover">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
                             <th scope="col">CODIGO</th>
                             <th scope="col">RAZAO SOCIAL</th>
                             <th scope="col">FANTASIA</th>
@@ -67,9 +66,8 @@ const Person = ({ informeParent = f => f }) => {
                     <tbody>
                         {people.map(function (person) {
                             return (
-                                <tr key={person.id} onClick={() => informeParent(person) }>
+                                <tr key={person.id} onClick={() => informeParent(person)}>
                                     <td>{person.id}</td>
-                                    <td>{person.codigo}</td>
                                     <td>{person.razao_social_nome}</td>
                                     <td>{person.fantasia}</td>
                                     <td>{person.cnpj_cpf}</td>
