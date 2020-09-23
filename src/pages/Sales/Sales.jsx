@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { Form, Button, Container, Modal } from 'react-bootstrap';
 
 import Product from '../../components/Product/Product.jsx';
@@ -26,7 +26,7 @@ function Sales() {
 
             <Container>
                 <Form.Row className="d-flex flex-nowrap">
-                    <SearchPerson label={"Cliente"} type={"customer"} />
+                    <SearchPerson autoFocus={true} label={"Cliente"} type={"customer"} />
 
                     <SearchPerson label={"Vendedor"} type={"seller"} />
 
