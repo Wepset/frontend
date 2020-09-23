@@ -10,7 +10,7 @@ import PersonService from '../../http/Person';
 import { useProducts } from '../../hooks/products';
 import { useEffect } from 'react';
 
-function SearchPeople({ label, type }) {
+function SearchPeople({ label, type, ...rest }) {
     const { setCustomer, setSeller } = useProducts();
     const [personField, setPersonField] = useState('');
     const [person, setPerson] = useState({});
@@ -48,6 +48,13 @@ function SearchPeople({ label, type }) {
                  */
                 if (type === "customer") {
                     document.querySelectorAll("input:nth-child(2)")[1].value = response.data[0].interno.razao_social_nome;
+
+                    setTimeout(() => {
+                        document.querySelector("button").click();
+                        setShow(false);
+                    }, 1000);
+
+                    setShow(false);
                 }
             } else {
                 setShow(true);
@@ -82,7 +89,7 @@ function SearchPeople({ label, type }) {
 
             <Form.Group as={Form.Col}>
                 <Form.Label className="mr-2">{label}</Form.Label>
-                <Form.Control type="text" placeholder={`Informe o ${label}`} onBlur={handleBlur} onChange={handleChange} value={personField} />
+                <Form.Control type="text" placeholder={`Informe o ${label}`} {...rest} onBlur={handleBlur} onChange={handleChange} value={personField} />
             </Form.Group>
 
             <Form.Group className="d-flex align-items-end mr-1">

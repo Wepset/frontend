@@ -124,7 +124,7 @@ const Product = () => {
                 <table ref={tableRef} className="table table-hover" onKeyDown={moveCursor} tabIndex="0">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
+                            <th scope="col">Codigo</th>
                             <th scope="col">Fabricante</th>
                             <th scope="col">Med</th>
                             <th scope="col">Tipo</th>
