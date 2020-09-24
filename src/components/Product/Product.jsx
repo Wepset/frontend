@@ -73,8 +73,17 @@ const Product = () => {
         const UP = 38;
         const DOWN = 40;
 
+        if (!!tableRef.current.children.tbody === false) {
+            e.preventDefault();
+            manufacturerInput.current.focus();
+
+            return true;
+        }
+
         const product = productList[rowSelected];
+
         const tableRow = tableRef.current.querySelector(`tbody tr[data-id="${product.id}"]`);
+
         tableRow.focus();
 
         switch (e.keyCode) {
