@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect, useRef } from 'react';
-import DatePicker from "react-datepicker"; 
+import DatePicker from "react-datepicker";
 import { FiCalendar } from 'react-icons/fi';
 import { ptBR } from 'date-fns/locale';
 
@@ -182,7 +182,8 @@ function OrderGrid({ focusOnFirstInput }) {
         handleProducts();
 
         if (focusOnFirstInput) {
-            const quantityInput = table.current.querySelector('tbody tr td input[data-type=quantity]');
+            const quantityInput = table.current.querySelector(`tbody tr td input[data-type=quantity]`);
+
             if (quantityInput) {
                 setTimeout(() => quantityInput.focus(), 500);
             }
@@ -208,9 +209,45 @@ function OrderGrid({ focusOnFirstInput }) {
         });
     }, [products]);
 
+    function moveCursor(e) {
+        const TAB = 9;
+
+        // CURRENT HTML ELEMENT
+        const HTMLElement = e.target;
+        const HTMLElementName = HTMLElement.nodeName;
+
+        switch (e.keyCode) {
+            case TAB:
+                const currentTr = e.target.parentNode.parentNode;
+                const lastChildId = currentTr.parentNode.lastChild.dataset.id;
+
+                // A movimentação vertical deve ser feita entre selects
+                if (HTMLElementName !== 'SELECT') {
+                    return true;
+                }
+
+                // Se estivermos no último select, não continuaremos nesse código
+                if (currentTr.dataset.id === lastChildId) {
+                    return true;
+                }
+
+                e.preventDefault();
+
+                const nextTr = currentTr.nextElementSibling;
+
+                const nextSelect = nextTr.querySelector(`select`);
+
+                nextSelect.focus();
+
+                break;
+            default:
+                return true;
+        }
+    }
+
     return (
         <div>
-            <table className="table table-hover table-sm" ref={table}>
+            <table className="table table-hover table-sm" ref={table} onKeyDown={moveCursor}>
                 <thead>
                     <tr>
                         <th scope="col"></th>
@@ -282,7 +319,7 @@ function OrderGrid({ focusOnFirstInput }) {
                     {
                         products.map(function (product) {
                             return (
-                                <tr key={product.id}>
+                                <tr key={product.id} data-id={product.id}>
                                     <td className="d-flex align-items-center">
                                         <Icon label="icon L1C2" alt="Delete Icon" onClick={() => deleteProduct(product)} />
                                         <input type="checkbox" className="ml-1" onClick={(e) => { handleSetterCheckbox(product.id, e.target.checked); }} value={product.selected} />
