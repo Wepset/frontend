@@ -73,7 +73,9 @@ const Product = () => {
         const UP = 38;
         const DOWN = 40;
 
-        if (!!tableRef.current.children.tbody === false) {
+        let rowsNumber = tableRef.current.querySelectorAll("tbody tr").length;
+
+        if (rowsNumber === 0) {
             e.preventDefault();
             manufacturerInput.current.focus();
 
