@@ -31,7 +31,7 @@ function Sales() {
 
             <Container>
                 <Form.Row className="d-flex flex-nowrap">
-                    <SearchCustomer searchItemButton={searchItemButton}  />
+                    <SearchCustomer searchItemButton={searchItemButton} />
                     <SearchSeller />
 
                     <Form.Group className="d-flex align-items-end col-md-2">
