@@ -55,6 +55,10 @@ function Sales() {
                     <SearchCustomer searchItemButton={searchItemButton} />
                     <SearchSeller />
 
+                    <Form.Group className="d-flex align-items-end mr-1">
+                        <Form.Control type="text" data-target="seller" placeholder={`Pedido`} />
+                    </Form.Group>
+
                     <Form.Group className="d-flex align-items-end col-md-2">
                         <Button ref={searchItemButton} variant="primary" onClick={handleShow}>
                             Pesquisar item

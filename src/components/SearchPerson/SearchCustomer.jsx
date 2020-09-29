@@ -65,7 +65,11 @@ function SearchCustomer({ searchItemButton, ...rest }) {
 
       <Form.Group as={Form.Col}>
         <Form.Label className="mr-2">Cliente</Form.Label>
-        <Form.Control type="text" data-target="customer" data-id={customerId} placeholder={`Informe o cliente`} {...rest} onBlur={handleBlur} onChange={handleChange} value={customerName} autoFocus={true} />
+        <Form.Control type="text" placeholder={`Informe o cliente`} {...rest} onBlur={handleBlur} onChange={handleChange} autoFocus={true} />
+      </Form.Group>
+
+      <Form.Group as={Form.Col} className="d-flex align-items-end mr-1 ml-1">
+        <Form.Control type="text" data-id={customerId} data-target="customer" value={customerName} disabled />
       </Form.Group>
 
       <Form.Group className="d-flex align-items-end mr-1">
