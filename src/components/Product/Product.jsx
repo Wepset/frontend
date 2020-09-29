@@ -116,32 +116,30 @@ const Product = () => {
 
     return (
         <div className="page-modal">
-            <div>
-                <form onSubmit={getProductList}>
-                    <div className="form-row pl-1 pt-1">
-                        <div className="col">
-                            <input type="text" onChange={handleChange} className="form-control" placeholder="Fabricante" name="fabricante" ref={manufacturerInput} />
-                        </div>
-                        <div className="col">
-                            <input type="text" onChange={handleChange} className="form-control" placeholder="Tipo" name="tipo" />
-                        </div>
-                        <div className="col">
-                            <input type="text" onChange={handleChange} className="form-control" placeholder="Sub Descrição" name="sub_descricao" />
-                        </div>
-                        <div className="col">
-                            <input type="text" onChange={handleChange} className="form-control" placeholder="Observação" name="obs" />
-                        </div>
-                        <div className="col">
-                            <input type="text" className="form-control" placeholder="Composição" name="composicao" />
-                        </div>
-                        <div className="col">
-                            <button type="submit" className="btn btn-primary mb-2">Buscar</button>
-                        </div>
+            <form onSubmit={getProductList}>
+                <div className="form-row pl-1 pt-1">
+                    <div className="col">
+                        <input type="text" onChange={handleChange} className="form-control" placeholder="Fabricante" name="fabricante" ref={manufacturerInput} />
                     </div>
-                </form>
-            </div>
+                    <div className="col">
+                        <input type="text" onChange={handleChange} className="form-control" placeholder="Tipo" name="tipo" />
+                    </div>
+                    <div className="col">
+                        <input type="text" onChange={handleChange} className="form-control" placeholder="Sub Descrição" name="sub_descricao" />
+                    </div>
+                    <div className="col">
+                        <input type="text" onChange={handleChange} className="form-control" placeholder="Observação" name="obs" />
+                    </div>
+                    <div className="col">
+                        <input type="text" className="form-control" placeholder="Composição" name="composicao" />
+                    </div>
+                    <div className="col">
+                        <button type="submit" className="btn btn-primary mb-2">Buscar</button>
+                    </div>
+                </div>
+            </form>
 
-            <div className="overflow-auto max-height-modal-grid">
+            <div>
                 <table ref={tableRef} className="table table-hover" onKeyDown={moveCursor} tabIndex="0">
                     <thead>
                         <tr>

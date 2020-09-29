@@ -76,6 +76,11 @@ td, th {
   font-size: 14px;
 }
 
+.modal-content {
+  width: 90vw;
+  margin-left: -20vw;
+}
+
 .page-modal tr:focus {
   outline: 0;
 }
@@ -85,13 +90,15 @@ td, th {
   white-space: nowrap;
 }
 
-.modal-content {
-  width: 90vw;
-  margin-left: -20vw;
+.page-modal>div {
+  max-height: 60vh;
+  overflow-y: auto;
 }
 
-.max-height-modal-grid {
-  max-height: 60vh;
+.page-modal table tr {
+  line-height: 10px;
+  min-height: 10px;
+  height: 10px;
 }
 
 .logo-height {
