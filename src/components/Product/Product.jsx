@@ -44,22 +44,31 @@ const Product = () => {
         }
     }, [formData]);
 
-    const addProductToCart = useCallback((product) => {
-        const message = `O item ${product.tipo} ${product.sub_descricao} ${product.marca} já foi adicionado, deseja aumentar a quantidade?`;
-        const productIndex = products.findIndex(currentProduct => currentProduct.id === product.id);
-        const order = new Order();
+    /**
+     * Get the message to add a product to cart.
+     * 
+     * @param {Object} product
+     * 
+     * @return {String}
+     */
+    function message(Product) {
+        return `O item ${Product.tipo} ${Product.sub_descricao} ${Product.marca} já foi adicionado, deseja aumentar a quantidade?`;
+    }
 
-        const tableRow = tableRef.current.querySelector(`tbody tr[data-id="${product.id}"]`);
-        tableRow.focus();
+    const addProductToCart = useCallback((product) => {
+        const productIndex = products.findIndex(currentProduct => currentProduct.id === product.id);
+
+        setFocusOnRow(product.id);
+
         setRowSelected(productList.findIndex(currentProduct => currentProduct.id === product.id));
 
         if (productIndex < 0) {
-            order.create(product.id).then(response => {
+            (new Order()).create(product.id).then(response => {
                 setProducts([...products, response.data]);
             });
         } else {
-            if (window.confirm(message)) {
-                order.create(product.id).then(response => {
+            if (window.confirm(message(product))) {
+                (new Order()).create(product.id).then(response => {
                     const productsSwap = [...products];
                     productsSwap[productIndex] = response.data;
                     setProducts(productsSwap);
@@ -69,45 +78,72 @@ const Product = () => {
 
     }, [productList, products, setProducts]);
 
-    const moveCursor = useCallback((e) => {
-        let rowsNumber = tableRef.current.querySelectorAll("tbody tr").length;
+    /**
+     * Set focus on manufacturer input.
+     * 
+     * @param {Object} e 
+     * 
+     * @return {Boolean}
+     */
+    function setFocusOnManufacturer(e) {
+        e.preventDefault();
+        manufacturerInput.current.focus();
 
-        if (rowsNumber === 0) {
-            e.preventDefault();
-            manufacturerInput.current.focus();
+        return true;
+    }
 
-            return true;
-        }
-
-        const product = productList[rowSelected];
-
-        const tableRow = tableRef.current.querySelector(`tbody tr[data-id="${product.id}"]`);
+    /**
+     * Set focus on tr.
+     * 
+     * @param {Integer} id
+     * 
+     * @return {Boolean}
+     */
+    function setFocusOnRow(id) {
+        const tableRow = tableRef.current.querySelector(`tbody tr[data-id="${id}"]`);
 
         tableRow.focus();
 
+        return true;
+    }
+
+    const moveCursor = useCallback((e) => {
+        let rowCounter = tableRef.current.querySelectorAll(`tbody tr`).length;
+        let __ROW = rowSelected;
+
+        if (rowCounter === 0) {
+            return setFocusOnManufacturer(e);
+        }
+
+        const product = productList[__ROW];
+
+        setFocusOnRow(product.id);
+
         switch (e.keyCode) {
             case Keys.TAB:
-                e.preventDefault();
-                manufacturerInput.current.focus();
-                break;
+                return setFocusOnManufacturer(e);
+
             case Keys.ENTER:
                 addProductToCart(product);
+
                 break;
             case Keys.UP:
-                if (rowSelected > 0) {
-                    setRowSelected(rowSelected - 1);
+                if (__ROW > 0) {
+                    __ROW--;
                 }
 
                 break;
             case Keys.DOWN:
-                if ((rowSelected + 1) < productList.length) {
-                    setRowSelected(rowSelected + 1);
+                if ((__ROW + 1) < productList.length) {
+                    __ROW++;
                 }
 
                 break;
             default:
                 break;
         }
+
+        setRowSelected(__ROW);
     }, [addProductToCart, productList, rowSelected]);
 
     useEffect(() => {
@@ -117,24 +153,29 @@ const Product = () => {
     return (
         <div className="page-modal">
             <form onSubmit={getProductList}>
-                <div className="form-row pl-1 pt-1">
+                <div className="form-row pl-1 pt-1 pb-2">
                     <div className="col">
-                        <input type="text" onChange={handleChange} className="form-control" placeholder="Fabricante" name="fabricante" ref={manufacturerInput} />
+                        <label htmlFor="fabricante">Fabricante</label>
+                        <input type="text" onChange={handleChange} className="form-control" name="fabricante" ref={manufacturerInput} />
                     </div>
                     <div className="col">
-                        <input type="text" onChange={handleChange} className="form-control" placeholder="Tipo" name="tipo" />
+                        <label htmlFor="fabricante">Tipo</label>
+                        <input type="text" onChange={handleChange} className="form-control" placeholder="" name="tipo" />
                     </div>
                     <div className="col">
-                        <input type="text" onChange={handleChange} className="form-control" placeholder="Sub Descrição" name="sub_descricao" />
+                        <label htmlFor="fabricante">Sub Descrição</label>
+                        <input type="text" onChange={handleChange} className="form-control" name="sub_descricao" />
                     </div>
                     <div className="col">
-                        <input type="text" onChange={handleChange} className="form-control" placeholder="Observação" name="obs" />
+                        <label htmlFor="fabricante">Observação</label>
+                        <input type="text" onChange={handleChange} className="form-control" name="obs" />
                     </div>
                     <div className="col">
-                        <input type="text" className="form-control" placeholder="Composição" name="composicao" />
+                        <label htmlFor="fabricante">Composição</label>
+                        <input type="text" className="form-control" name="composicao" />
                     </div>
-                    <div className="col">
-                        <button type="submit" className="btn btn-primary mb-2">Buscar</button>
+                    <div className="col d-flex align-items-end">
+                        <button type="submit" className="btn btn-primary">Buscar</button>
                     </div>
                 </div>
             </form>
