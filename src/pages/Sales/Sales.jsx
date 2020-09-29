@@ -45,7 +45,7 @@ function Sales() {
                 <Modal.Header closeButton>
                     <Modal.Title>{title}</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body className="pt-1">
                     <Product />
                 </Modal.Body>
             </Modal>

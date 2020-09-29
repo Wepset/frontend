@@ -153,7 +153,7 @@ const Product = () => {
     return (
         <div className="page-modal">
             <form onSubmit={getProductList}>
-                <div className="form-row pl-1 pt-1 pb-2">
+                <div className="form-row pl-1 pb-1">
                     <div className="col">
                         <label htmlFor="fabricante">Fabricante</label>
                         <input type="text" onChange={handleChange} className="form-control" name="fabricante" ref={manufacturerInput} />
