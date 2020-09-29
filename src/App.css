@@ -90,8 +90,12 @@ td, th {
   margin-left: -20vw;
 }
 
-.vh-60 {
+.max-height-modal-grid {
   max-height: 60vh;
+}
+
+.logo-height {
+  height: 60px;
 }
 
 .cursor-pointer {

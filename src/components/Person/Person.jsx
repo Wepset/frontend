@@ -45,7 +45,7 @@ const Person = ({ informeParent = f => f }) => {
                 </form>
             </div>
 
-            <div className="overflow-auto vh-60">
+            <div className="overflow-auto max-height-modal-grid">
                 <table className="table table-hover">
                     <thead>
                         <tr>
