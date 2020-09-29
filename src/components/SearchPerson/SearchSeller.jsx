@@ -55,7 +55,7 @@ function SearchSeller({ ...rest }) {
 
       <Form.Group as={Form.Col}>
         <Form.Label className="mr-2">Vendedor</Form.Label>
-        <Form.Control type="text" placeholder={`Informe o vendedor`} {...rest} onBlur={handleBlur} onChange={handleChange} value={sellerName} />
+        <Form.Control type="text" data-target="seller" placeholder={`Informe o vendedor`} {...rest} onBlur={handleBlur} onChange={handleChange} value={sellerName} />
       </Form.Group>
 
       <Form.Group className="d-flex align-items-end mr-1">

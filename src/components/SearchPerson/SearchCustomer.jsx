@@ -8,6 +8,7 @@ import { useProducts } from '../../hooks/products';
 function SearchCustomer({ searchItemButton, ...rest }) {
   const { setCustomer, setSeller, customer, searchPerson } = useProducts();
   const [customerName, setCustomerName] = useState('');
+  const [customerId, setCustomerId] = useState('');
   const [show, setShow] = useState(false);
 
   const handleClose = useCallback(() => setShow(false), []);
@@ -46,6 +47,7 @@ function SearchCustomer({ searchItemButton, ...rest }) {
 
   useEffect(() => {
     setCustomerName(customer.razao_social_nome || '');
+    setCustomerId(customer.id || '')
 
     return () => { };
   }, [customer, searchItemButton, setCustomerName]);
@@ -63,7 +65,7 @@ function SearchCustomer({ searchItemButton, ...rest }) {
 
       <Form.Group as={Form.Col}>
         <Form.Label className="mr-2">Cliente</Form.Label>
-        <Form.Control type="text" placeholder={`Informe o cliente`} {...rest} onBlur={handleBlur} onChange={handleChange} value={customerName} autoFocus={true} />
+        <Form.Control type="text" data-target="customer" data-id={customerId} placeholder={`Informe o cliente`} {...rest} onBlur={handleBlur} onChange={handleChange} value={customerName} autoFocus={true} />
       </Form.Group>
 
       <Form.Group className="d-flex align-items-end mr-1">

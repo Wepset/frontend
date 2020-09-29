@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useRef } from 'react';
+import React, { useCallback, useState, useRef, useEffect } from 'react';
 import { Form, Button, Container, Modal } from 'react-bootstrap';
 
 import Product from '../../components/Product/Product.jsx';
@@ -9,6 +9,7 @@ import SearchSeller from '../../components/SearchPerson/SearchSeller.jsx';
 
 function Sales() {
     const searchItemButton = useRef(null);
+    const [title, setTitle] = useState('');
     const [show, setShow] = useState(false);
     const [focusOnFirstInput, setFocusOnFirstInput] = useState(false);
 
@@ -18,11 +19,31 @@ function Sales() {
         setFocusOnFirstInput(true);
     }, []);
 
+    /**
+     * Product search title.
+     * 
+     * @param {Void}
+     * 
+     * @return {Boolean}
+     */
+    function handleTitle() {
+        const customer = document.querySelector(`input[data-target=customer]`);
+        const seller = document.querySelector(`input[data-target=seller]`);
+
+        setTitle(`Dados para a Busca #${customer.dataset.id} ${customer.value} / ${seller.value}`);
+
+        return true;
+    }
+
+    useEffect(() => {
+        handleTitle();
+    });
+
     return (
         <>
             <Modal show={show} onHide={handleClose} size="lg">
                 <Modal.Header closeButton>
-                    <Modal.Title>Dados para a Busca</Modal.Title>
+                    <Modal.Title>{title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Product />
