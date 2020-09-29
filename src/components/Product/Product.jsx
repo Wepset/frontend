@@ -141,7 +141,7 @@ const Product = () => {
                 </form>
             </div>
 
-            <div className="overflow-auto" style={{ "maxHeight": "275px" }}>
+            <div className="overflow-auto vh-60">
                 <table ref={tableRef} className="table table-hover" onKeyDown={moveCursor} tabIndex="0">
                     <thead>
                         <tr>

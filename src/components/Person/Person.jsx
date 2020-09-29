@@ -45,7 +45,7 @@ const Person = ({ informeParent = f => f }) => {
                 </form>
             </div>
 
-            <div className="overflow-auto" style={{ "maxHeight": "275px" }}>
+            <div className="overflow-auto vh-60">
                 <table className="table table-hover">
                     <thead>
                         <tr>

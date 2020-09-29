@@ -85,6 +85,15 @@ td, th {
   white-space: nowrap;
 }
 
+.modal-content {
+  width: 90vw;
+  margin-left: -20vw;
+}
+
+.vh-60 {
+  max-height: 60vh;
+}
+
 .cursor-pointer {
   cursor: pointer;
 }
