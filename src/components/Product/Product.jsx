@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
+import Keys from '../../repositories/KeyCodeRepository.js';
+
 import { useProducts } from '../../hooks/products';
 import ProductService from '../../http/Product.js';
 import Order from '../../http/Order.js';
@@ -68,11 +70,6 @@ const Product = () => {
     }, [productList, products, setProducts]);
 
     const moveCursor = useCallback((e) => {
-        const ENTER = 13;
-        const TAB = 9;
-        const UP = 38;
-        const DOWN = 40;
-
         let rowsNumber = tableRef.current.querySelectorAll("tbody tr").length;
 
         if (rowsNumber === 0) {
@@ -89,20 +86,20 @@ const Product = () => {
         tableRow.focus();
 
         switch (e.keyCode) {
-            case TAB:
+            case Keys.TAB:
                 e.preventDefault();
                 manufacturerInput.current.focus();
                 break;
-            case ENTER:
+            case Keys.ENTER:
                 addProductToCart(product);
                 break;
-            case UP:
+            case Keys.UP:
                 if (rowSelected > 0) {
                     setRowSelected(rowSelected - 1);
                 }
 
                 break;
-            case DOWN:
+            case Keys.DOWN:
                 if ((rowSelected + 1) < productList.length) {
                     setRowSelected(rowSelected + 1);
                 }

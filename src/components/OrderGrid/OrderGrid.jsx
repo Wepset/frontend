@@ -1,9 +1,13 @@
 import React, { useCallback, useState, useEffect, useRef } from 'react';
+
+import Keys from '../../repositories/KeyCodeRepository.js';
+
 import DatePicker from "react-datepicker";
 import { FiCalendar } from 'react-icons/fi';
 import { ptBR } from 'date-fns/locale';
 
 import { useProducts } from '../../hooks/products';
+
 import Icon from '../Icon/Icon.jsx';
 import Order from '../../http/Order.js';
 import api from '../../service/api';
@@ -210,14 +214,12 @@ function OrderGrid({ focusOnFirstInput }) {
     }, [products]);
 
     function moveCursor(e) {
-        const TAB = 9;
-
         // CURRENT HTML ELEMENT
         const HTMLElement = e.target;
         const HTMLElementName = HTMLElement.nodeName;
 
         switch (e.keyCode) {
-            case TAB:
+            case Keys.TAB:
                 const currentTr = e.target.parentNode.parentNode;
                 const lastChildId = currentTr.parentNode.lastChild.dataset.id;
 
