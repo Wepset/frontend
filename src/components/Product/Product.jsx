@@ -13,7 +13,10 @@ const Product = () => {
         fabricante: '',
         tipo: '',
         sub_descricao: '',
-        obs: ''
+        obs: '',
+        medida: '',
+        marca: '',
+        id: ''
     });
     const [rowSelected, setRowSelected] = useState(0);
     const [productList, setProductList] = useState([]);
@@ -191,20 +194,28 @@ const Product = () => {
                         <input type="text" onChange={handleChange} className="form-control" name="fabricante" ref={manufacturerInput} />
                     </div>
                     <div className="col">
-                        <label htmlFor="fabricante">Tipo</label>
+                        <label htmlFor="tipo">Tipo</label>
                         <input type="text" onChange={handleChange} className="form-control" placeholder="" name="tipo" />
                     </div>
                     <div className="col">
-                        <label htmlFor="fabricante">Sub Descrição</label>
+                        <label htmlFor="sub_descricao">Sub Descrição</label>
                         <input type="text" onChange={handleChange} className="form-control" name="sub_descricao" />
                     </div>
                     <div className="col">
-                        <label htmlFor="fabricante">Aplicação</label>
+                        <label htmlFor="obs">Aplicação</label>
                         <input type="text" onChange={handleChange} className="form-control" name="obs" />
                     </div>
                     <div className="col">
-                        <label htmlFor="fabricante">Composição</label>
-                        <input type="text" className="form-control" name="composicao" />
+                        <label htmlFor="medida">Medida</label>
+                        <input type="text" onChange={handleChange} className="form-control" name="medida" />
+                    </div>
+                    <div className="col">
+                        <label htmlFor="marca">Marca</label>
+                        <input type="text" onChange={handleChange} className="form-control" name="marca" />
+                    </div>
+                    <div className="col">
+                        <label htmlFor="id">GTIN</label>
+                        <input type="text" onChange={handleChange} className="form-control" name="id" />
                     </div>
                     <div className="col d-flex align-items-end">
                         <button type="submit" className="btn btn-primary">Buscar</button>
