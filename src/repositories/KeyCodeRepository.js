@@ -1,8 +1,10 @@
 const Keys = {
-    UP: 38,
-    ENTER: 13,
+    DELETE: 8,
     TAB: 9,
-    DOWN: 40
+    ENTER: 13,
+    UP: 38,
+    DOWN: 40,
+    ZERO: 48
 };
 
 export default Keys;

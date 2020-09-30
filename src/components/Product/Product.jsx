@@ -55,7 +55,7 @@ const Product = () => {
         return `O item ${Product.tipo} ${Product.sub_descricao} ${Product.marca} já foi adicionado, deseja aumentar a quantidade?`;
     }
 
-    const addProductToCart = useCallback((product) => {
+    const addProductToCart = useCallback((product, quantity) => {
         const productIndex = products.findIndex(currentProduct => currentProduct.id === product.id);
 
         setFocusOnRow(product.id);
@@ -63,12 +63,12 @@ const Product = () => {
         setRowSelected(productList.findIndex(currentProduct => currentProduct.id === product.id));
 
         if (productIndex < 0) {
-            (new Order()).create(product.id).then(response => {
+            (new Order()).create(product.id, quantity).then(response => {
                 setProducts([...products, response.data]);
             });
         } else {
             if (window.confirm(message(product))) {
-                (new Order()).create(product.id).then(response => {
+                (new Order()).create(product.id, quantity).then(response => {
                     const productsSwap = [...products];
                     productsSwap[productIndex] = response.data;
                     setProducts(productsSwap);
@@ -108,7 +108,7 @@ const Product = () => {
     }
 
     const moveCursor = useCallback((e) => {
-        let rowCounter = tableRef.current.querySelectorAll(`tbody tr`).length;
+        const rowCounter = tableRef.current.querySelectorAll(`tbody tr`).length;
         let __ROW = rowSelected;
 
         if (rowCounter === 0) {
@@ -117,6 +117,33 @@ const Product = () => {
 
         const product = productList[__ROW];
 
+        if ((e.keyCode >= 48 && e.keyCode <= 57) || e.keyCode === Keys.DELETE) {
+            e.preventDefault();
+
+            const __NUMBER = e.keyCode - Keys.ZERO;
+            const __INPUT = e.target;
+            const __TD = __INPUT.parentElement;
+            const __TR = __TD.parentElement;
+
+            const id = parseInt(__TR.dataset.id);
+
+            const productsArray = productList.map((product) => {
+                if (product.id === id) {
+                    if (e.keyCode === Keys.DELETE) {
+                        product.quantity = 0;
+                    } else {
+                        product.quantity = (parseInt(product.quantity) === 0) ? __NUMBER : `${product.quantity}${__NUMBER}`;
+                    }
+                }
+
+                return product;
+            });
+
+            setProductList(productsArray);
+
+            return true;
+        }
+
         setFocusOnRow(product.id);
 
         switch (e.keyCode) {
@@ -124,7 +151,9 @@ const Product = () => {
                 return setFocusOnManufacturer(e);
 
             case Keys.ENTER:
-                addProductToCart(product);
+                const __QUANTITY = e.target.value;
+
+                addProductToCart(product, __QUANTITY);
 
                 break;
             case Keys.UP:
@@ -167,7 +196,7 @@ const Product = () => {
                         <input type="text" onChange={handleChange} className="form-control" name="sub_descricao" />
                     </div>
                     <div className="col">
-                        <label htmlFor="fabricante">Observação</label>
+                        <label htmlFor="fabricante">Aplicação</label>
                         <input type="text" onChange={handleChange} className="form-control" name="obs" />
                     </div>
                     <div className="col">
@@ -184,25 +213,26 @@ const Product = () => {
                 <table ref={tableRef} className="table table-hover" onKeyDown={moveCursor} tabIndex="0">
                     <thead>
                         <tr>
-                            <th scope="col">Codigo</th>
-                            <th scope="col">Fabricante</th>
-                            <th scope="col">Med</th>
-                            <th scope="col">Tipo</th>
-                            <th scope="col">Sub</th>
-                            <th scope="col">Obs</th>
-                            <th scope="col">Marca </th>
+                            <th scope="col">CODIGO</th>
+                            <th scope="col">FABRICANTE</th>
+                            <th scope="col">MED</th>
+                            <th scope="col">TIPO</th>
+                            <th scope="col">SUB</th>
+                            <th scope="col">OBS</th>
+                            <th scope="col">MARCA</th>
                             <th scope="col">UN</th>
                             <th scope="col">QTD</th>
                             <th scope="col">RES</th>
                             <th scope="col">PROM</th>
-                            <th scope="col">Venda</th>
+                            <th scope="col">QTD</th>
+                            <th scope="col">VENDA</th>
                         </tr>
                     </thead>
                     <tbody>
                         {
                             productList.map(function (product, index) {
                                 return (
-                                    <tr key={product.id} data-id={product.id} tabIndex={index} className={index === rowSelected ? 'table-success' : 'table-light'} onClick={() => addProductToCart(product)}>
+                                    <tr key={product.id} data-id={product.id} tabIndex={index} className={index === rowSelected ? 'table-success' : 'table-light'}>
                                         <td>{product.id}</td>
                                         <td>{product.fabricante}</td>
                                         <td>{product.medida}</td>
@@ -214,7 +244,18 @@ const Product = () => {
                                         <td>{Math.floor(Math.random() * 1000)}</td>
                                         <td>{Math.floor(Math.random() * 1000)}</td>
                                         <td>{product.preco_promocao}</td>
-                                        <td>{product.preco_venda}</td>
+                                        <td className="p-0">
+                                            <input type="text" className="form-control form-control-sm" onChange={() => { }} value={product.quantity} />
+                                        </td>
+                                        <td className="p-0">
+                                            <select className="form-control form-control-sm">
+                                                {
+                                                    product.preco_venda.map(function (price, index) {
+                                                        return <option key={index} value={parseFloat(price.value)}>{price.label}</option>;
+                                                    })
+                                                }
+                                            </select>
+                                        </td>
                                     </tr>
                                 );
                             })
