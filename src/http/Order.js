@@ -16,7 +16,7 @@ class Order {
      * @param  {Integer} id
      */
     create(id, quantity) {
-        return api.post('orders', { id: id, quantity: quantity });
+        return api.post('orders', { id: id, quantity: quantity || 1 });
     }
 }
 
