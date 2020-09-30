@@ -144,12 +144,15 @@ const Product = () => {
             return true;
         }
 
-        setFocusOnRow(product.id);
+        if (e.keyCode !== Keys.TAB) {
+            setFocusOnRow(product.id);
+        }
 
         switch (e.keyCode) {
             case Keys.TAB:
-                return setFocusOnManufacturer(e);
+                __ROW++;
 
+                break;
             case Keys.ENTER:
                 const __QUANTITY = e.target.value;
 
