@@ -6,6 +6,8 @@ import { useProducts } from '../../hooks/products';
 import ProductService from '../../http/Product.js';
 import Order from '../../http/Order.js';
 
+import PriceSelect from '../../components/PriceSelect/PriceSelect.jsx';
+
 const Product = () => {
     const tableRef = useRef(null);
     const manufacturerInput = useRef(null);
@@ -259,20 +261,14 @@ const Product = () => {
                                         <td>{product.obs}</td>
                                         <td>{product.marca}</td>
                                         <td>{product.un}</td>
-                                        <td>{Math.floor(Math.random() * 1000)}</td>
-                                        <td>{Math.floor(Math.random() * 1000)}</td>
+                                        <td>{product.obs.length}</td>
+                                        <td>{parseInt(product.preco_promocao)}</td>
                                         <td>{product.preco_promocao}</td>
                                         <td className="p-0">
                                             <input type="text" className="form-control form-control-sm" onChange={() => { }} value={product.quantity} />
                                         </td>
                                         <td className="p-0">
-                                            <select className="form-control form-control-sm">
-                                                {
-                                                    product.preco_venda.map(function (price, index) {
-                                                        return <option key={index} value={parseFloat(price.value)}>{price.label}</option>;
-                                                    })
-                                                }
-                                            </select>
+                                            <PriceSelect product={product} />
                                         </td>
                                     </tr>
                                 );
