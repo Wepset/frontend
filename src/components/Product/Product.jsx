@@ -153,7 +153,11 @@ const Product = () => {
 
         switch (e.keyCode) {
             case Keys.TAB:
-                __ROW++;
+                if ((__ROW + 1) < productList.length) {
+                    __ROW++;
+                } else {
+                    __ROW = 0;
+                }
 
                 break;
             case Keys.ENTER:
