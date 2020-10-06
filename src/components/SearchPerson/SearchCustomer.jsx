@@ -63,16 +63,16 @@ function SearchCustomer({ searchItemButton, ...rest }) {
         </Modal.Body>
       </Modal>
 
-      <Form.Group as={Form.Col}>
+      <Form.Group as={Form.Col} className="justify-content-end flex-column">
         <Form.Label className="mr-2">Cliente</Form.Label>
         <Form.Control type="text" placeholder={`Informe o cliente`} {...rest} onBlur={handleBlur} onChange={handleChange} autoFocus={true} />
       </Form.Group>
 
-      <Form.Group as={Form.Col} className="d-flex align-items-end mr-1 ml-1">
+      <Form.Group as={Form.Col} className="align-items-end mr-1 ml-1">
         <Form.Control type="text" data-id={customerId} data-target="customer" value={customerName} disabled />
       </Form.Group>
 
-      <Form.Group className="d-flex align-items-end mr-1">
+      <Form.Group className="align-items-end mr-1">
         <span onClick={handleShow}>
           <h3><Icon label="icon L5C5" alt="L5C5" /></h3>
         </span>

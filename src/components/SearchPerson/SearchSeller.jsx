@@ -53,12 +53,12 @@ function SearchSeller({ ...rest }) {
         </Modal.Body>
       </Modal>
 
-      <Form.Group as={Form.Col}>
+      <Form.Group as={Form.Col} className="justify-content-end flex-column">
         <Form.Label className="mr-2">Vendedor</Form.Label>
         <Form.Control type="text" data-target="seller" placeholder={`Informe o vendedor`} {...rest} onBlur={handleBlur} onChange={handleChange} value={sellerName} />
       </Form.Group>
 
-      <Form.Group className="d-flex align-items-end mr-1">
+      <Form.Group className="align-items-end mr-1">
         <span onClick={handleShow}>
           <h3><Icon label="icon L5C5" alt="L5C5" /></h3>
         </span>

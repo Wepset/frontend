@@ -51,22 +51,23 @@ function Sales() {
             </Modal>
 
             <Container>
-                <Form.Row className="d-flex flex-nowrap">
+                <Form.Row className="flex-nowrap">
                     <SearchCustomer searchItemButton={searchItemButton} />
                     <SearchSeller />
 
-                    <Form.Group className="d-flex align-items-end mr-1">
+                    <Form.Group className="justify-content-end flex-column">
+                        <Form.Label className="mr-2">Pedido</Form.Label>
                         <Form.Control type="text" data-target="seller" placeholder={`Pedido`} />
                     </Form.Group>
 
-                    <Form.Group className="d-flex align-items-end col-md-2">
+                    <Form.Group className="align-items-end col-md-2 text-nowrap">
                         <Button ref={searchItemButton} variant="primary" onClick={handleShow}>
                             Pesquisar item
                         </Button>
                     </Form.Group>
 
-                    <Form.Group className="d-flex align-items-center">
-                        <span className="d-flex rounded float-right img-fluid">
+                    <Form.Group className="align-items-center">
+                        <span className="rounded float-right img-fluid">
                             <Logo />
                         </span>
                     </Form.Group>

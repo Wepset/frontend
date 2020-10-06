@@ -248,7 +248,7 @@ function OrderGrid({ focusOnFirstInput }) {
     }
 
     return (
-        <div>
+        <div className="justify-content-center">
             <table className="table table-hover table-sm" ref={table} onKeyDown={moveCursor}>
                 <thead>
                     <tr>
