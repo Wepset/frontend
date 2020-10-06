@@ -121,8 +121,9 @@ const Product = () => {
         }
 
         const product = productList[__ROW];
+        let element = document.querySelector(`.modal-content table tbody tr[data-id="${product.id}"]`);
 
-        if ((e.keyCode >= 48 && e.keyCode <= 57) || e.keyCode === Keys.DELETE) {
+        if (((e.keyCode >= 48 && e.keyCode <= 57) || e.keyCode === Keys.DELETE) && e.target.tagName === 'INPUT') {
             e.preventDefault();
 
             const __NUMBER = e.keyCode - Keys.ZERO;
@@ -157,8 +158,6 @@ const Product = () => {
             case Keys.TAB:
                 e.preventDefault();
 
-                const element = document.querySelector(`.modal-content table tbody tr[data-id="${product.id}"]`);
-
                 if (e.target.tagName === 'SELECT') {
                     element.querySelector(`input`).focus();
                 } else {
@@ -167,7 +166,7 @@ const Product = () => {
 
                 break;
             case Keys.ENTER:
-                const __QUANTITY = e.target.value;
+                const __QUANTITY = element.querySelector('input').value;
 
                 addProductToCart(product, __QUANTITY);
 
