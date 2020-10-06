@@ -155,10 +155,14 @@ const Product = () => {
 
         switch (e.keyCode) {
             case Keys.TAB:
-                if ((__ROW + 1) < productList.length) {
-                    __ROW++;
+                e.preventDefault();
+
+                const element = document.querySelector(`.modal-content table tbody tr[data-id="${product.id}"]`);
+
+                if (e.target.tagName === 'SELECT') {
+                    element.querySelector(`input`).focus();
                 } else {
-                    __ROW = 0;
+                    element.querySelector(`select`).focus();
                 }
 
                 break;
