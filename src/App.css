@@ -1,77 +1,3 @@
-.icon {
-  object-fit: none;
-  width: 19px;
-  height: 19px;
-}
-
-.L1C1 {
-  object-position: -10px -60px;
-}
-
-.L1C2 {
-  object-position: -20px -58px;
-}
-
-.L1C5 {
-  object-position: -80px -58px;
-}
-
-.L2C1 {
-  object-position: -20px -60px;
-}
-
-.L3C1 {
-  object-position: -30px -60px;
-}
-
-.L5C2 {
-  object-position: -20px -130px;
-}
-
-.L5C5 {
-  object-position: -80px -130px;
-}
-
-.L6C2 {
-  object-position: -20px -148px;
-}
-
-.L6C4 {
-  object-position: -60px -149px;
-}
-
-.L7C1 {
-  object-position: -120px -132px;
-}
-
-.L7C5 {
-  object-position: -80px -168px;
-}
-
-.L8C6 {
-  object-position: -100px -186px;
-}
-
-.L10C3 {
-  object-position: -40px -220px;
-}
-
-.L11C3 {
-  object-position: -40px -238px;
-}
-
-.L11C5 {
-  object-position: -80px -238px;
-}
-
-.L15C3 {
-  object-position: -40px -238px;
-}
-
-.L17C4 {
-  object-position: -61px -342px;
-}
-
 td, th {
   font-size: 14px;
 }
@@ -123,4 +49,10 @@ td, th {
   padding: 0;
   font-size: 13px;
   text-align: center
+}
+
+@media(max-width: 1000px) {
+  #logo {
+    display: none;
+  }
 }
